@@ -1,0 +1,53 @@
+
+body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url(../../images/background_stars.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.mainmenue a{
+    color: white;
+    background-color: grey;
+    border: white 2px solid;
+    text-align: center;
+    padding: 5px;
+}
+
+.mainmenue a:hover{
+    color: black;
+    background-color: pink;
+    border: white 2px solid;
+    text-align: center;
+    padding: 5px;
+}
+
+.timebox {
+    color: white;
+    background-color: grey;
+    border: white 2px solid;
+    width: 17vw;
+    text-align: center;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: pink;
+    color: black;
+    text-align: center;
+    padding: 5px;
+}
