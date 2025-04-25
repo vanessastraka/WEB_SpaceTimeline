@@ -7,11 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const NUM_DOTS = 10;     // Anzahl der Punkte auf der Timeline
     const SPACING  = 600;    // horizontaler Abstand zwischen den Punkten (in Pixeln)
     const DOT_R    = 150;     // Radius der Kreise, die die Events darstellen (in Pixeln)
-    const HEIGHT   = 350;    // Höhe des SVG-Containers (in Pixeln)
+    const HEIGHT   = 450;    // Höhe des SVG-Containers (in Pixeln)
     const svgNS    = 'http://www.w3.org/2000/svg';  // Namespace für SVG-Elemente
 
     const container = document.getElementById('timeline-container');  // Referenz auf den Wrapper div
     const cw = container.clientWidth;  // tatsächliche Breite des Containers (in Pixeln)
+
+    //RESET-TIMER FUNCTION
+    // wir merken uns die Position, auf die wir initial scrollen:
+    // (horizontaler Abstand zum letzten Icon minus die halbe Viewport-Breite)
+    const initialScroll = (DOT_R /* startX */ + (NUM_DOTS - 1) * SPACING) - (cw / 2) + DOT_R;
 
 
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -113,6 +118,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const lastPos = (pathLen / (NUM_DOTS - 1)) * (NUM_DOTS - 1);  // Länge bis zum letzten Punkt
         // Ziehe das halbierte Viewport-Breite ab, damit er in die Mitte rückt
         container.scrollLeft = lastPos - (cw / 2) + DOT_R;
+
+        //RESET-TIMER FUNCTION
+        container.scrollLeft = initialScroll;
+
+        document
+            .getElementById('reset-timeline')
+            .addEventListener('click', e => {
+                e.preventDefault();
+                container.scrollLeft = initialScroll;
+            });
 
     }
 

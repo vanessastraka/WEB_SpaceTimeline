@@ -4,7 +4,7 @@
 #timeline-container {
     width: 90vw;           /* fast volle Breite */
     max-width: none;       /* keine fixe Obergrenze */
-    height: 350px;         /* gibt Platz für den Bogen */
+    height: 500px;         /* gibt Platz für den Bogen */
     margin: 150px 0 40px 0; /* oben/rechts/unten 40px, links 0 */
     overflow: hidden;      /* versteckt Scrollbars */
     position: relative;

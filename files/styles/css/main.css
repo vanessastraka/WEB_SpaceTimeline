@@ -19,7 +19,7 @@ body {
 
 .mainmenue a:hover{
     color: black;
-    background-color: pink;
+    background-color: cornflowerblue;
     border: white 2px solid;
     text-align: center;
     padding: 5px;
@@ -46,7 +46,7 @@ footer {
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: rgb(255, 132, 152);
+    background-color: cornflowerblue;
     color: black;
     text-align: center;
     padding: 5px;
