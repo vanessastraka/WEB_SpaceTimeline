@@ -1,3 +1,6 @@
+* {
+    font-family: "Cascadia Code", "Cascadia Mono", serif;
+}
 
 body {
     width: 100%;
@@ -15,8 +18,9 @@ body {
     border: white 2px solid;
     text-align: center;
     padding: 5px;
+    border-radius: 6px;
+    box-sizing: border-box;
 }
-
 .mainmenue a:hover{
     color: black;
     background-color: cornflowerblue;
@@ -25,13 +29,72 @@ body {
     padding: 5px;
 }
 
+/* Filter-Dropdown wie Menü-Button */
+#filter-panel select {
+    color: white;
+    background-color: cornflowerblue;
+    border: 2px solid white;
+    padding: 5px;
+    text-align: center;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Date-Picker wie Menü-Button */
+#filter-panel input[type="date"] {
+    color: white;
+    background-color: cornflowerblue;
+    border: 2px solid white;
+    padding: 5px;
+    text-align: center;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Start-Button wie Menü-Button */
+#filter-panel button {
+    color: white;
+    background-color: grey;
+    border: 2px solid white;
+    padding: 5px;
+    text-align: center;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Filter Labels*/
+#filter-panel label {
+    display: inline-block;
+    padding: 5px;
+    background-color: grey;
+    color: white;
+    border: 2px solid white;
+    border-radius: 6px;
+    box-sizing: border-box;
+    text-align: center;
+    margin-right: 4px;
+}
+
+/* Hover-Effekte */
+#filter-panel select:hover,
+#filter-panel input[type="date"]:hover,
+#filter-panel button:hover,
+#filter-panel label:hover {
+    background-color: cornflowerblue;
+    color: black;
+}
+
+
 .timebox {
     color: white;
     background-color: grey;
     border: white 2px solid;
-    width: 17vw;
+    width: 12vw;
     text-align: center;
     margin: 0;
+    padding: 5px;
+    border-radius: 6px;
+    box-sizing: border-box;
 }
 
 header {

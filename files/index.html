@@ -17,15 +17,32 @@
             <a href="https://api.nasa.gov/" target="_blank">NASA API Info</a>
             <a href="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjAweHR0Y3A1Z2c1dTZzOXZqcWUxYnd1YXloZWhyYmhsdHRyOTVqeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7btZ1Gm7ZL25pLMs/giphy.gif" target="_blank">FAQ</a>
         </nav>
+
+        <!-- FILTER BUTTONS -->
+        <div id="filter-panel">
+            <label for="filter-text">Event:</label>
+            <select id="filter-text">
+                <!-- Optionen werden per JS befüllt -->
+            </select>
+
+            <label for="filter-from">From:</label>
+            <input type="date" id="filter-from" />
+
+            <label for="filter-to">Until:</label>
+            <input type="date" id="filter-to" />
+
+            <button id="filter-go">Start</button>
+        </div>
+
+        <!-- BOX FOR CURRENT TIME -->
         <div>
             <p class="timebox">
-                Last updated:
-                <span id="currenttime"></span>
+               <span id="currenttime"></span>
             </p>
         </div>
     </header>
 
-    <!-- SP -->
+    <!-- CONTAINER FOR TIMELINE -->
     <main>
         <div id="timeline-container">
             <div id="timeline"></div>
