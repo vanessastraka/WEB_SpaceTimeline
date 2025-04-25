@@ -5,7 +5,7 @@
     width: 90vw;           /* fast volle Breite */
     max-width: none;       /* keine fixe Obergrenze */
     height: 350px;         /* gibt Platz für den Bogen */
-    margin: 100px 0 40px 0; /* oben/rechts/unten 40px, links 0 */
+    margin: 150px 0 40px 0; /* oben/rechts/unten 40px, links 0 */
     overflow: hidden;      /* versteckt Scrollbars */
     position: relative;
     cursor: grab;
@@ -28,9 +28,11 @@
 
 /* Die Punkte auf dem Pfad */
 .timeline-dot {
-    fill: #888;
+    /*fill: #888;
     stroke: #fff;
     stroke-width: 2px;
+     */
+    display: none;
 }
 
 /* Die Nummern über den Punkten */
@@ -41,3 +43,24 @@
     dominant-baseline: text-before-edge;
     user-select: none;
 }
+
+/* INFO-BOX */
+
+.info-rect {
+    fill: rgba(128, 128, 128, 0.8);  /* halbtransparentes Grau */
+    stroke: #fff;
+    stroke-width: 2px;
+    rx: 6px;                          /* abgerundete Ecken */
+    ry: 6px;
+}
+
+/* Info-Text */
+.info-text {
+    fill: #fff;
+    font-size: 0.8rem;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    user-select: none;
+}
+
+
