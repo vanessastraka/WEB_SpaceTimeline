@@ -1,0 +1,43 @@
+/* files/styles/css/timeline.css */
+
+/* Der sichtbare Bereich – overflow hidden, Cursor zum Ziehen */
+#timeline-container {
+    width: 90vw;           /* fast volle Breite */
+    max-width: none;       /* keine fixe Obergrenze */
+    height: 350px;         /* gibt Platz für den Bogen */
+    margin: 100px 0 40px 0; /* oben/rechts/unten 40px, links 0 */
+    overflow: hidden;      /* versteckt Scrollbars */
+    position: relative;
+    cursor: grab;
+}
+#timeline-container.active {
+    cursor: grabbing;
+}
+
+/* Das SVG, das breiter als der Container ist */
+#timeline-svg {
+    display: block;        /* eliminiert Inline-Abstände */
+}
+
+/* Der gebogene Pfad („Ketten“-Line) */
+.timeline-path {
+    fill: none;
+    stroke: rgba(255,255,255,0.5);
+    stroke-width: 2px;
+}
+
+/* Die Punkte auf dem Pfad */
+.timeline-dot {
+    fill: #888;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+/* Die Nummern über den Punkten */
+.timeline-text {
+    fill: #fff;
+    font-size: 0.8rem;
+    text-anchor: middle;
+    dominant-baseline: text-before-edge;
+    user-select: none;
+}
