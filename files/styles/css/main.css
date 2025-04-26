@@ -4,8 +4,8 @@
 
 body {
     width: 100%;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
     background-image: url(../../images/background_stars.jpg);
     background-repeat: no-repeat;
     background-size: cover;
@@ -104,13 +104,12 @@ header {
     margin: 20px;
 }
 
-footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
+/* footer {
+    position: relative;
     width: 100%;
     background-color: cornflowerblue;
     color: black;
     text-align: center;
-    padding: 5px;
-}
+    padding: 20px 5px 70px;
+    z-index: 1;
+} */

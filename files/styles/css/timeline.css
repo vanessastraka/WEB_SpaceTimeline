@@ -60,3 +60,38 @@
     font-family: sans-serif;
 }
 
+#info-panel {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #1c1c1c;
+    color: white;
+    overflow: hidden;
+    max-height: 50px; /* Nur Button sichtbar */
+    transition: max-height 0.5s ease-in-out;
+    border-top: 2px solid #555;
+    z-index: 1000;
+  }
+  
+  #info-panel.expanded {
+    max-height: 400px; /* Ganzes Panel sichtbar */
+  }
+  
+  #toggle-button {
+    width: 100%;
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  #toggle-button:hover {
+    background-color: #555;
+  }
+  
+  .info-content {
+    padding: 20px;
+  }
+

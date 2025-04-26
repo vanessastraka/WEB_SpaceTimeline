@@ -247,3 +247,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+const toggleButton = document.getElementById('toggle-button');
+const infoPanel = document.getElementById('info-panel');
+
+toggleButton.addEventListener('click', () => {
+  infoPanel.classList.toggle('expanded');
+
+  // Button-Text ändern je nach Status
+  if (infoPanel.classList.contains('expanded')) {
+    toggleButton.textContent = "▼ Info schließen";
+  } else {
+    toggleButton.textContent = "▲ Info öffnen";
+  }
+});
