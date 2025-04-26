@@ -256,8 +256,8 @@ toggleButton.addEventListener('click', () => {
 
   // Button-Text ändern je nach Status
   if (infoPanel.classList.contains('expanded')) {
-    toggleButton.textContent = "▼ Info schließen";
+    toggleButton.textContent = "▼ Close";
   } else {
-    toggleButton.textContent = "▲ Info öffnen";
+    toggleButton.textContent = "▲ Open";
   }
 });
