@@ -9,7 +9,7 @@ html, body {
     height: 100%;
     overflow-x: hidden;
   }
-  
+
 #timeline-container {
     width: 100%;           /* fast volle Breite */
     max-width: none;       /* keine fixe Obergrenze */
@@ -87,6 +87,16 @@ html, body {
   
   #info-panel.expanded {
     max-height: 400px;
+  }
+
+  #info-panel .info-box {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  #info-panel.expanded .info-box {
+    opacity: 1;
+    transition: opacity 2.0s ease;
   }
   
   #toggle-button {
