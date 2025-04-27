@@ -1,8 +1,17 @@
 /* files/styles/css/timeline.css */
 
 /* Der sichtbare Bereich – overflow hidden, Cursor zum Ziehen */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+  }
+  
 #timeline-container {
-    width: 100vw;           /* fast volle Breite */
+    width: 100%;           /* fast volle Breite */
     max-width: none;       /* keine fixe Obergrenze */
     height: 500px;         /* gibt Platz für den Bogen */
     margin: 150px 0 40px 0; /* oben/rechts/unten 40px, links 0 */
@@ -133,6 +142,3 @@
   .event-table td {
     color: #e0e0e0;
   }
-  
-
-
