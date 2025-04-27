@@ -64,34 +64,75 @@
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #1c1c1c;
-    color: white;
+    background-color: #1e1e2f;
+    color: #e0e0e0;
     overflow: hidden;
-    max-height: 50px; /* Nur Button sichtbar */
+    max-height: 50px;
     transition: max-height 0.5s ease-in-out;
-    border-top: 2px solid #555;
+    border-top: 2px solid #55577a;
     z-index: 1000;
+  
+    display: flex;
+    flex-direction: column;
   }
   
   #info-panel.expanded {
-    max-height: 400px; /* Ganzes Panel sichtbar */
+    max-height: 400px;
   }
   
   #toggle-button {
-    width: 100%;
-    background-color: #333;
-    color: white;
+    background-color: #2c2c3e;
+    color: #e0e0e0;
     border: none;
-    padding: 10px;
+    padding: 15px;
     font-size: 16px;
     cursor: pointer;
+    flex-shrink: 0;
+    font-family: 'Courier New', Courier, monospace;
   }
   
   #toggle-button:hover {
-    background-color: #555;
+    background-color: #3a3a50;
   }
   
   .info-content {
-    padding: 20px;
+    display: flex;
+    flex: 1;
+    padding: 10px;
+    gap: 10px; /* Abstand zwischen Boxen */
+    overflow-y: auto;
   }
+  
+  .info-box {
+    flex: 1;
+    background-color: #2c2c3e;
+    padding: 15px;
+    border: 2px solid #55577a;
+    border-radius: 10px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .info-box h3 {
+    margin-top: 0;
+    background-color: #2c2c3e;
+    color: #b0c4de;
+    padding: 5px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+  }
+  
+  .info-box img {
+    width: 80%;
+    height: auto;
+    margin: 10px auto 0 auto;
+    display: block;
+    border-radius: 5px;
+  }
+
+  .event-table td {
+    color: #e0e0e0;
+  }
+  
+
 
