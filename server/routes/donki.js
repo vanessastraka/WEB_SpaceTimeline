@@ -6,7 +6,8 @@ const router = express.Router();
 const donkiController = require('../controllers/donkiController')
 
 // GET /api/donki -> if route gets called the function getDonkiData in donkiController gets called
-router.get('/', donkiController.getDonkiData)
+// we accept through eventData: eventType, startDate and endDate
+router.get('/:eventData?', donkiController.getDonkiData);
 
 // to import in server.js
 module.exports = router;

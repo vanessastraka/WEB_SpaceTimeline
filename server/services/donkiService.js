@@ -5,7 +5,7 @@ const axios = require('axios');
 // get environment variables -> API KEY
 require('dotenv').config();
 
-const API_URL = "https://api.nasa.gov/DONKI/GST?"; // geomagentic storms
+const API_URL = "https://api.nasa.gov/DONKI/";
 // getting the api key
 const apiKey = process.env.api_key;
 
@@ -19,87 +19,39 @@ function formateDate(date) {
 }
 
 // service function to get DONKI Data and wait till promise is resolved
-exports.fetchDonkiData = async () => {
+exports.fetchDonkiData = async (eventTypes, startDate, endDate) => {
 
+    const allEvents = {};
     // generating default call to current time (1 month)
     var now = new Date()
     var lastMonth = new Date(now)
     lastMonth.setMonth(now.getMonth() - 1)
     
-    var defaultStartDate = formateDate(lastMonth)
-    var defaultEndDate = formateDate(now)
+    //if we have a date we take that if not we generate a default one
+    var defaultStartDate = startDate || formateDate(lastMonth)
+    var defaultEndDate = endDate || formateDate(now)
 
     try {
         // axios calls the API and params automatically sets the URL with the important symbols
-        const response = await axios.get(API_URL, {
-            params: {
-                startDate: defaultStartDate,
-                //defaultStartDate,
-                endDate : defaultEndDate,
-                //defaultEndDate,
-                api_key: apiKey
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Something went wrong during DONKI API CALL:', error)
-        throw error;
-    }
-}
 
-fetchGeomagneticStorms = async () => {
-        try {
-            // axios calls the API and params automatically sets the URL with the important symbols
-            const response = await axios.get(API_URL, {
+        for (const eventType of eventTypes) {
+
+            const response = await axios.get(`${API_URL}${eventType}`, {
                 params: {
                     startDate: defaultStartDate,
+                    //defaultStartDate,
                     endDate : defaultEndDate,
+                    //defaultEndDate,
                     api_key: apiKey
                 }
             });
-            return response.data;
-        } catch (error) {
-            console.error('Something went wrong during DONKI API CALL:', error)
-            throw error;
+
+            allEvents[eventType] = response.data;
         }
-}
 
-fetchSolarFlares = async () => {
-    try {
-        // axios calls the API and params automatically sets the URL with the important symbols
-        const response = await axios.get(API_URL, {
-            params: {
-                startDate: defaultStartDate,
-                endDate : defaultEndDate,
-                api_key: apiKey
-            }
-        });
-        return response.data;
+        return allEvents;
     } catch (error) {
         console.error('Something went wrong during DONKI API CALL:', error)
         throw error;
     }
-}
-
-fetchInterplanetaryShock = async () => {
-    // getting the api key
-    const apiKey = process.env.api_key;
-    
-    try {
-        // axios calls the API and params automatically sets the URL with the important symbols
-        const response = await axios.get(API_URL, {
-            params: {
-                startDate: defaultStartDate,
-                endDate : defaultEndDate,
-                location: all,
-                catalog: all,
-                api_key: apiKey
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Something went wrong during DONKI API CALL:', error)
-        throw error;
-    }
-    
 }
