@@ -11,4 +11,3 @@ router.get('/:eventData?', donkiController.getDonkiData);
 
 // to import in server.js
 module.exports = router;
-

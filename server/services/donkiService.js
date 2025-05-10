@@ -55,3 +55,39 @@ exports.fetchDonkiData = async (eventTypes, startDate, endDate) => {
         throw error;
     }
 }
+
+
+// service function to get DONKI Data by ID fpr favorites
+exports.fetchEventById = async (eventType, id) => {
+    try {
+        // using same date range as in fetchDonkiData
+        const now = new Date();
+        const lastMonth = new Date(now);
+        lastMonth.setMonth(now.getMonth() - 1);
+
+        const defaultStartDate = formateDate(lastMonth);
+        const defaultEndDate = formateDate(now);
+
+        const response = await axios.get(`${API_URL}${eventType}`, {
+            params: {
+                startDate: defaultStartDate,
+                endDate: defaultEndDate,
+                api_key: apiKey
+            }
+        });
+
+        //checks data by ID depending on event type
+        const events = response.data;
+        const found = events.find(event =>
+            (event.flrID && event.flrID === id) ||
+            (event.gstID && event.gstID === id) ||
+            (event.ipsID && event.ipsID === id)
+        );
+        
+        return found || null; //returns found or null
+
+    } catch (err) {
+        console.error(`Error fetching ${eventType} from DONKI:`, err.message);
+        return null;
+    }
+};

@@ -104,6 +104,23 @@ header {
     margin: 20px;
 }
 
+/*Favorite-Button*/
+.favorite-btn {
+    color: white;
+    background-color: grey;
+    border: 2px solid white;
+    padding: 5px;
+    text-align: center;
+    border-radius: 6px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.favorite-btn:hover {
+    background-color: cornflowerblue;
+    color: black;
+}
+
 /* footer {
     position: relative;
     width: 100%;
