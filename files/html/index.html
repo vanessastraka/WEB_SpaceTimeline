@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/css/main.css">
+    <link rel="stylesheet" href="../styles/css/timeline.css">
+    <link rel="icon" type="image/apng" href="../images/favicon.png">
+    <meta name="author" content="KLKM">
+    <meta name="description" content="Project for ...">
+    <title>SpaceTimeline</title>
+    <style>
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+<!-- HEADER WITH LOGIN/REGISTER -->
+<header>
+    <nav class="mainmenue">
+        <a id="reset-timeline" href="#">Reset Timeline</a>
+        <a href="https://api.nasa.gov/" target="_blank">NASA API Info</a>
+        <a href="https://media3.giphy.com/..." target="_blank">FAQ</a>
+        <a id="login-link" href="login.html">Login</a>
+        <a id="register-link" href="register.html">Register</a>
+        <span id="user-info" class="hidden"></span>
+        <button id="logout-btn" class="hidden">Logout</button>
+    </nav>
+
+    <!-- FILTER PANEL -->
+    <div id="filter-panel">
+        <label for="filter-text">Event:</label>
+        <select id="filter-text"><!-- per JS --></select>
+        <label for="filter-from">From:</label>
+        <input type="date" id="filter-from" />
+        <label for="filter-to">Until:</label>
+        <input type="date" id="filter-to" />
+        <button id="filter-go">Start</button>
+    </div>
+
+    <div>
+        <p class="timebox"><span id="currenttime"></span></p>
+    </div>
+</header>
+
+<!-- TIMELINE -->
+<main>
+    <div id="timeline-container">
+        <div id="timeline"></div>
+    </div>
+</main>
+
+<footer>Copyright © 2025 KLKM</footer>
+
+<!-- INFO PANEL -->
+<div id="info-panel">
+    <button id="toggle-button">▲ Open</button>
+    <div class="info-content">
+        <div class="info-box">
+            <h3>General Information</h3>
+            <p>A solar flare is a sudden, intense burst of radiation from the sun’s surface...</p>
+        </div>
+        <div class="info-box">
+            <h3>Event Information</h3>
+            <div class="event-box"></div>
+        </div>
+        <div class="info-box">
+            <h3>Related Image</h3>
+            <img src="https://d.newsweek.com/en/full/2519753/illustration-solar-flare.jpg" alt="Related Image" />
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="scripts/app.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const username    = localStorage.getItem('username');
+        const loginLink   = document.getElementById('login-link');
+        const registerLink= document.getElementById('register-link');
+        const userInfo    = document.getElementById('user-info');
+        const logoutBtn   = document.getElementById('logout-btn');
+
+        if (username) {
+            userInfo.textContent = 'Angemeldet: ' + username;
+            userInfo.classList.remove('hidden');
+            loginLink.classList.add('hidden');
+            registerLink.classList.add('hidden');
+            logoutBtn.classList.remove('hidden');
+        }
+
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('username');
+            localStorage.removeItem('jwt');
+            window.location.href = '/';
+        });
+    });
+</script>
+<script src="../scripts/index.js"></script>
+<script src="../scripts/timeline.js"></script>
+</body>
+</html>

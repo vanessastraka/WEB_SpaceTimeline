@@ -1,263 +1,249 @@
 // files/scripts/timeline.js
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~ PLACEHOLDER FOR API ~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
+// Global array for events
 let events = [];
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~ FILTER FUNCTION FOR EVENTS ~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/**
+ * 1) Fetch DONKI-Events der letzten 30 Tage vom eigenen Backend
+ */
+async function loadDonkiEvents() {
+    const end = new Date();
+    const start = new Date(end);
+    start.setDate(end.getDate() - 30);
+    const fmt = d => d.toISOString().slice(0,10);
 
+    const res = await fetch(`/api/donki?startDate=${fmt(start)}&endDate=${fmt(end)}`);
+    if (!res.ok) throw new Error(`API-Error ${res.status}`);
+    const data = await res.json(); // { GST: [...], FLR: [...], IPS: [...] }
+
+    // Flach mappen in [{ text, date, raw, eventType }]
+    events = Object.entries(data)
+        .flatMap(([type, arr]) =>
+            arr.map(ev => {
+                let rawDate;
+                switch(type) {
+                    case 'GST': rawDate = ev.startTime; break;
+                    case 'IPS': rawDate = ev.eventTime; break;
+                    case 'FLR':
+                    default:    rawDate = ev.beginTime;
+                }
+                return {
+                    text:      type,
+                    date:      rawDate.slice(0,10),
+                    raw:       ev,
+                    eventType: type
+                };
+            })
+        )
+        .sort((a,b) => new Date(a.date) - new Date(b.date));
+}
+
+/**
+ * 2) Filterfunktion bleibt unverändert
+ */
 function filterEvents({ textTerm, dateFrom, dateTo }) {
     return events.filter(item => {
-        // 1) Text-Filter (case‐insensitive)
-        if (textTerm) {
-            const lower = textTerm.trim().toLowerCase();
-            if (!item.text.toLowerCase().includes(lower)) return false;
-        }
-        // 2) Datumsbereich
+        if (textTerm && !item.text.toLowerCase().includes(textTerm.toLowerCase())) return false;
         if (dateFrom && item.date < dateFrom) return false;
-        if (dateTo && item.date > dateTo) return false;
+        if (dateTo   && item.date > dateTo)   return false;
         return true;
     });
 }
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~ DRAW SUN TIMELINE ON FIXED X AXIS ~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
+/**
+ * 3) Zeichne die SVG-Timeline und mache Kästchen klickbar
+ */
 function drawTimeline(data) {
     const container = document.getElementById('timeline-container');
+    // Container leeren
+    while (container.firstChild) container.removeChild(container.firstChild);
 
-    // Container komplett leeren (kein innerHTML)
-    while (container.firstChild) {
-        container.removeChild(container.firstChild);
-    }
-
-    const NUM_DOTS = data.length;
-    const SPACING  = 600;
-    const DOT_R    = 150;
-    const HEIGHT   = 450;
-    const svgNS    = 'http://www.w3.org/2000/svg';
-    const cw       = container.clientWidth;
-
-    // SVG aufsetzen
+    const NUM_DOTS   = data.length;
+    const SPACING    = 600;
+    const DOT_R      = 150;
+    const HEIGHT     = 450;
+    const svgNS      = 'http://www.w3.org/2000/svg';
+    const cw         = container.clientWidth;
     const totalWidth = cw + Math.max(0, NUM_DOTS - 1) * SPACING;
+
+    // SVG erstellen
     const svg = document.createElementNS(svgNS, 'svg');
-    svg.setAttribute('id', 'timeline-svg');
-    svg.setAttribute('width',  totalWidth);
+    svg.id = 'timeline-svg';
+    svg.setAttribute('width', totalWidth);
     svg.setAttribute('height', HEIGHT);
-    svg.setAttributeNS(
-        'http://www.w3.org/2000/xmlns/',
-        'xmlns:xlink',
-        'http://www.w3.org/1999/xlink'
-    );
+    svg.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', 'http://www.w3.org/1999/xlink');
     container.appendChild(svg);
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- ~~~~~~~~~ MAKE THE CURVE FOR SUN ELEMENTS ~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    const basely      = HEIGHT * 0.6;
-    const rx          = totalWidth / 2;
-    const ry          = 100;
-    const startMiddle = DOT_R;
-    const endX        = startMiddle + Math.max(0, NUM_DOTS - 1) * SPACING;
-
+    // Pfad unter den Icons
+    const baseY  = HEIGHT * 0.6;
+    const rx     = totalWidth / 2;
+    const ry     = 100;
+    const startPositioning = DOT_R;
+    const endX   = startPositioning + Math.max(0, NUM_DOTS - 1) * SPACING;
     const path = document.createElementNS(svgNS, 'path');
-    path.setAttribute('d', `M ${startMiddle},${basely} A ${rx},${ry} 0 0,0 ${endX},${basely}`);
-    path.setAttribute('class', 'timeline-path');
+    path.setAttribute('d', `M ${startPositioning},${baseY} A ${rx},${ry} 0 0,0 ${endX},${baseY}`);
+    path.classList.add('timeline-path');
     svg.appendChild(path);
 
-    // Sobald das Element im DOM ist, kann getTotalLength() arbeiten
     const pathLen = path.getTotalLength();
+    const step    = NUM_DOTS > 1 ? pathLen / (NUM_DOTS - 1) : 0;
 
-    // Schrittweite (verhindert Division durch Null bei nur einem Dot)
-    const step = NUM_DOTS > 1 ? pathLen / (NUM_DOTS - 1) : 0;
-
-    // Für jedes Event Icon + Info-Box zeichnen
+    // Icons und Info-Boxen
     data.forEach((item, i) => {
-        const pos = step * i;
-        const pt  = path.getPointAtLength(pos);
-        const { text, date } = item;
+        const pt = path.getPointAtLength(step * i);
 
-        // 1) Icon
+        // Sonne
         const img = document.createElementNS(svgNS, 'image');
         img.setAttribute('href', '/images/sun.png');
-        img.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href','/images/sun.png');
-        img.setAttribute('width',  DOT_R * 2);
+        img.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '/images/sun.png');
+        img.setAttribute('width', DOT_R * 2);
         img.setAttribute('height', DOT_R * 2);
-        img.setAttribute('x',      pt.x - DOT_R);
-        img.setAttribute('y',      pt.y - DOT_R);
-        img.setAttribute('class',  'timeline-icon');
+        img.setAttribute('x', pt.x - DOT_R);
+        img.setAttribute('y', pt.y - DOT_R);
+        img.classList.add('timeline-icon');
         svg.appendChild(img);
 
-        // 2) Info-Box
-        const INFO_W         = 140;
-        const INFO_H         = 60;
-        const INFO_Y_OFFSET  = DOT_R + INFO_H + 12;
-        const DATE_FONT_SIZE = 14;
-
-        const rectY = pt.y - INFO_Y_OFFSET;
+        // Info-Box
+        const INFO_W  = 140;
+        const INFO_H  = 60;
+        const rectY   = pt.y - (DOT_R + INFO_H + 12);
         const rect = document.createElementNS(svgNS, 'rect');
-        rect.setAttribute('x',      pt.x - INFO_W/2);
-        rect.setAttribute('y',      rectY);
-        rect.setAttribute('width',  INFO_W);
+        rect.setAttribute('x', pt.x - INFO_W / 2);
+        rect.setAttribute('y', rectY);
+        rect.setAttribute('width', INFO_W);
         rect.setAttribute('height', INFO_H);
-        rect.setAttribute('class',  'info-rect');
+        rect.classList.add('info-rect');
+        rect.style.cursor = 'pointer';
         svg.appendChild(rect);
 
-        // 3) Haupttext in der Box
-        const mainTextY = rectY + 20;
+        // Klickhandler
+        rect.addEventListener('click', () => showInfoPanel(item));
+
+        // Text
+        const textY = rectY + 20;
         const infoText = document.createElementNS(svgNS, 'text');
-        infoText.setAttribute('x',                pt.x);
-        infoText.setAttribute('y',                mainTextY);
-        infoText.setAttribute('class',            'info-text');
-        infoText.setAttribute('text-anchor',      'middle');
-        infoText.setAttribute('dominant-baseline','middle');
-        infoText.textContent = text;
+        infoText.setAttribute('x', pt.x);
+        infoText.setAttribute('y', textY);
+        infoText.classList.add('info-text');
+        infoText.setAttribute('text-anchor', 'middle');
+        infoText.setAttribute('dominant-baseline', 'middle');
+        infoText.textContent = item.text;
         svg.appendChild(infoText);
 
-        // 4) Datum direkt unterordnen
+        // Datum
         const dateText = document.createElementNS(svgNS, 'text');
-        dateText.setAttribute('x',                pt.x);
-        dateText.setAttribute('y',                mainTextY + DATE_FONT_SIZE + 4);
-        dateText.setAttribute('class',            'date-text');
-        dateText.setAttribute('text-anchor',      'middle');
-        dateText.setAttribute('dominant-baseline','middle');
-        dateText.textContent = date;
+        dateText.setAttribute('x', pt.x);
+        dateText.setAttribute('y', textY + 18);
+        dateText.classList.add('date-text');
+        dateText.setAttribute('text-anchor', 'middle');
+        dateText.setAttribute('dominant-baseline', 'middle');
+        dateText.textContent = item.date;
         svg.appendChild(dateText);
     });
 
-  /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~~~~~~~~~ START SCROLLING FROM RIGHT ELEMENT ~~~~~~~~~
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    const initialScroll = (DOT_R + Math.max(0, NUM_DOTS - 1) * SPACING) - (cw / 2) + DOT_R;
+    // Initial scroll
+    const initialScroll = (DOT_R + (NUM_DOTS - 1) * SPACING) - (cw / 2) + DOT_R;
     container.scrollLeft = initialScroll;
 
- /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- ~~~~~~~~ RESET TIMELINE BUTTON FUNCTION ~~~~~~~~~
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    const resetBtn = document.getElementById('reset-timeline');
-    if (resetBtn) {
-        resetBtn.onclick = e => {
-            e.preventDefault();
-            container.scrollLeft = initialScroll;
-        };
-    }
+    // Reset-Button
+    document.getElementById('reset-timeline')?.addEventListener('click', e => {
+        e.preventDefault();
+        container.scrollLeft = initialScroll;
+    });
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~ MOUSE DRAG FUNCTION ~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    let isDown    = false;
-    let startX    = 0;
-    let scrollPos = 0;
-
+    // Drag-to-Scroll
+    let isDown = false;
+    let startX = 0;
+    let scrollX = 0;
     container.addEventListener('pointerdown', e => {
-        isDown    = true;
-        startX    = e.clientX;
-        scrollPos = container.scrollLeft;
+        isDown = true;
+        startX = e.clientX;
+        scrollX = container.scrollLeft;
         container.classList.add('active');
         container.setPointerCapture(e.pointerId);
     });
     container.addEventListener('pointermove', e => {
         if (!isDown) return;
         e.preventDefault();
-        container.scrollLeft = scrollPos - (e.clientX - startX);
+        container.scrollLeft = scrollX - (e.clientX - startX);
     });
-    ['pointerup','pointercancel'].forEach(ev => {
-        container.addEventListener(ev, e => {
+    ['pointerup','pointercancel'].forEach(evName =>
+        container.addEventListener(evName, e => {
             isDown = false;
             container.classList.remove('active');
             container.releasePointerCapture(e.pointerId);
-        });
-    });
+        })
+    );
 }
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~ DOMCONTENTLOADED ~~~~~~~~~~~~~~~~~~
-Sets Input for Filtering and then rebuilds
-the filtered timeline
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-document.addEventListener('DOMContentLoaded', () => {
-    // 1) Initiale Daten (später per fetch ersetzen)
-    events = [
-        { text: "Alpha", date: "2025-01-01" },
-        { text: "Beta",  date: "2025-01-15" },
-        { text: "Gamma", date: "2025-02-01" },
-        { text: "Delta", date: "2025-02-15" },
-        { text: "Pheta", date: "2025-03-01" },
-        { text: "Alpha", date: "2025-03-15" },
-        { text: "Beta",  date: "2025-04-01" },
-        { text: "Gamma", date: "2025-04-15" },
-        { text: "Delta", date: "2025-05-01" },
-        { text: "Pheta", date: "2025-05-15" },
-        { text: "Alpha", date: "2025-06-01" },
-        { text: "Beta",  date: "2025-06-15" },
-        { text: "Gamma", date: "2025-07-01" },
-        { text: "Delta", date: "2025-07-15" },
-        { text: "Pheta", date: "2025-08-01" },
-        { text: "Alpha", date: "2025-08-15" },
-        { text: "Beta",  date: "2025-09-01" },
-        { text: "Gamma", date: "2025-09-15" },
-        { text: "Delta", date: "2025-10-01" },
-        { text: "Pheta", date: "2025-10-15" }
-    ];
-
-    // 2) Dropdown für Text-Filter befüllen (einmalig eindeutige Werte)
-    const select = document.getElementById('filter-text');
-    if (select) {
-        // a) alle Texte aus den Events sammeln
-        const allTexts = events.map(item => item.text);
-        // b) mit Set auf eindeutige Werte reduzieren
-        const uniqueTexts = Array.from(new Set(allTexts));
-        // c) vorhandene Optionen entfernen
-        while (select.firstChild) {
-            select.removeChild(select.firstChild);
-        }
-        // d) Default-Option „Alle“
-        const emptyOpt = document.createElement('option');
-        emptyOpt.value = '';
-        emptyOpt.textContent = 'All';
-        select.appendChild(emptyOpt);
-        // e) für jeden eindeutigen Text eine Option anlegen
-        uniqueTexts.forEach(text => {
-            const opt = document.createElement('option');
-            opt.value = text;
-            opt.textContent = text;
-            select.appendChild(opt);
-        });
+/**
+ * 4) Panel befüllen
+ */
+function showInfoPanel(item) {
+    const ev    = item.raw;
+    const panel = document.getElementById('info-panel');
+    const btn   = document.getElementById('toggle-button');
+    if (!panel.classList.contains('expanded')) {
+        panel.classList.add('expanded');
+        btn.textContent = '▼ Close';
     }
+    const eventBox = panel.querySelector('.event-box');
+    eventBox.innerHTML = '';
+    // Tabelle programmatisch anlegen
+    const table = document.createElement('table');
+    table.classList.add('event-table');
+    const addRow = (label, value) => {
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td'); td1.innerHTML = `<strong>${label}</strong>`;
+        const td2 = document.createElement('td'); td2.textContent = value;
+        tr.append(td1, td2);
+        table.appendChild(tr);
+    };
+    addRow('Typ',        item.eventType);
+    addRow('Start Time', ev.startTime || ev.beginTime);
+    addRow('Peak Time',  ev.peakTime || '–');
+    addRow('End Time',   ev.endTime || '–');
+    addRow('ID',         ev.gstID || ev.flrID || ev.activityID);
+    addRow('Location',   ev.location || ev.sourceLocation || '–');
+    eventBox.appendChild(table);
+}
 
-    // 3) erste Darstellung
-    drawTimeline(events);
-
-    // 4) Filter-Button hooken
-    const btn = document.getElementById('filter-go');
-    if (btn) {
-        btn.addEventListener('click', () => {
+/**
+ * 5) Start: DOMContentLoaded
+ */
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await loadDonkiEvents();
+        // Filter-Dropdown
+        const select = document.getElementById('filter-text');
+        if (select) {
+            const opts = Array.from(new Set(events.map(e => e.text)));
+            select.innerHTML = '<option value="">All</option>' +
+                opts.map(t => `<option value="${t}">${t}</option>`).join('');
+        }
+        drawTimeline(events);
+        document.getElementById('filter-go')?.addEventListener('click', () => {
             const criteria = {
-                textTerm : document.getElementById('filter-text')?.value   || '',
-                dateFrom : document.getElementById('filter-from')?.value  || '',
-                dateTo   : document.getElementById('filter-to')?.value    || ''
+                textTerm: document.getElementById('filter-text')?.value || '',
+                dateFrom: document.getElementById('filter-from')?.value   || '',
+                dateTo:   document.getElementById('filter-to')?.value     || ''
             };
             const filtered = filterEvents(criteria);
             drawTimeline(filtered);
         });
+    } catch (err) {
+        console.error('Fehler beim Laden der Events:', err);
     }
 });
 
+/**
+ * 6) Toggle-Button
+ */
 const toggleButton = document.getElementById('toggle-button');
-const infoPanel = document.getElementById('info-panel');
-
+const infoPanel    = document.getElementById('info-panel');
 toggleButton.addEventListener('click', () => {
-  infoPanel.classList.toggle('expanded');
-
-  // Button-Text ändern je nach Status
-  if (infoPanel.classList.contains('expanded')) {
-    toggleButton.textContent = "▼ Close";
-  } else {
-    toggleButton.textContent = "▲ Open";
-  }
+    infoPanel.classList.toggle('expanded');
+    toggleButton.textContent = infoPanel.classList.contains('expanded')
+        ? '▼ Close'
+        : '▲ Open';
 });
