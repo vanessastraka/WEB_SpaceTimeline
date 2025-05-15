@@ -208,6 +208,39 @@ function showInfoPanel(item) {
     addRow('ID',         ev.gstID || ev.flrID || ev.activityID);
     addRow('Location',   ev.location || ev.sourceLocation || '–');
     eventBox.appendChild(table);
+
+    // Event wird abgespeichert bei /fav
+    const favBtn = document.getElementById('fav-button');
+    const favsite = document.getElementById('fav-site');
+    if (localStorage.getItem('jwt')) {
+    favBtn.classList.remove('hidden');
+    favsite.classList.remove('hidden');
+    favBtn.onclick = async () => {
+        try {
+            const res = await fetch('/api/favorites', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+                },
+                body: JSON.stringify({
+                    eventId: item.date,
+                    title: item.eventType,
+                    note: item.text,
+                    //note: "" // Optional später als Eingabefeld
+                })
+            });
+            if (!res.ok) throw new Error('Favorit konnte nicht gespeichert werden');
+            favBtn.textContent = '✓ Gespeichert!';
+            setTimeout(() => favBtn.textContent = '☆ Zu Favoriten', 2000);
+        } catch (err) {
+            console.error('Fehler beim Speichern:', err);
+            favBtn.textContent = '⚠ Fehler';
+        }
+        };
+    } else {
+        favBtn.classList.add('hidden');
+    }
 }
 
 /**

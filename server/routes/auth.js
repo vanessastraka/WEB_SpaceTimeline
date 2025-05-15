@@ -13,7 +13,7 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ error: 'Username existiert bereits' });
     }
     const hash = await bcrypt.hash(password, 12);
-    users.push({ id: Date.now().toString(), username, hash });
+    users.push({ id: Date.now().toString(), username, hash, favorites: [] });
     res.status(201).json({ message: 'User angelegt' });
 });
 
