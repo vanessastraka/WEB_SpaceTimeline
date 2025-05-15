@@ -1,5 +1,7 @@
 // files/scripts/timeline.js
 
+//TODO - Synch anschauen, aktuell lädt es langsam
+
 // Global array for events
 let events = [];
 
@@ -116,7 +118,7 @@ function drawTimeline(data) {
         rect.style.cursor = 'pointer';
         svg.appendChild(rect);
 
-        // Klickhandler
+        // Clickhandler
         rect.addEventListener('click', () => showInfoPanel(item));
 
         // Text

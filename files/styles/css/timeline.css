@@ -25,7 +25,7 @@ html, body {
 
 /* Das SVG, das breiter als der Container ist */
 #timeline-svg {
-    display: block;        /* eliminiert Inline-Abstände */
+    display: block; /* eliminiert Inline-Abstände */
 }
 
 /* Der gebogene Pfad („Ketten“-Line) */
@@ -129,6 +129,7 @@ html, body {
     border: 2px solid #55577a;
     border-radius: 10px;
     font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
   }
   
   .info-box h3 {
@@ -140,13 +141,12 @@ html, body {
     font-family: 'Courier New', Courier, monospace;
     text-align: center;
   }
-  
-  .info-box img {
-    width: 80%;
+
+  .related-image-box img {
+    width: 100%;
     height: auto;
-    margin: 10px auto 0 auto;
     display: block;
-    border-radius: 5px;
+    object-fit: contain;
   }
 
   .event-table td {
