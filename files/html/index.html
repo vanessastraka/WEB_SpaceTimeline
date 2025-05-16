@@ -9,38 +9,51 @@
     <meta name="author" content="KLKM">
     <meta name="description" content="Project for ...">
     <title>SpaceTimeline</title>
-    <style>
-        .hidden { display: none; }
-    </style>
+    <style>.hidden { display: none !important; }</style>
 </head>
 <body>
 <!-- HEADER WITH LOGIN/REGISTER -->
 <header>
-    <nav class="mainmenue">
-        <a id="reset-timeline" href="#">Reset Timeline</a>
-        <a href="https://api.nasa.gov/" target="_blank">NASA API Info</a>
-        <a href="https://media3.giphy.com/..." target="_blank">FAQ</a>
-        <a id="login-link" href="login.html">Login</a>
-        <a id="register-link" href="register.html">Register</a>
-        <span id="user-info" class="hidden"></span>
-        <button id="logout-btn" class="hidden">Logout</button>
-    </nav>
+    <div class="header-container">
+        <!-- LINKS: User-Info + Login/Logout -->
+        <div class="header-left">
+            <!-- Login-Form -->
+            <form id="login-form">
+                <input id="login-username" name="username" type="text"  placeholder="User"     required />
+                <input id="login-password" name="password" type="password" placeholder="Passwort" required />
+                <button type="submit">Login</button>
+                <span id="login-error" class="hidden"></span>
+            </form>
+            <!-- Nach Login: Username + Logout -->
+            <span id="user-info" class="hidden"></span>
+            <button id="logout-btn" class="hidden">Logout</button>
+        </div>
 
-    <!-- FILTER PANEL -->
-    <div id="filter-panel">
-        <label for="filter-text">Event:</label>
-        <select id="filter-text"><!-- per JS --></select>
-        <label for="filter-from">From:</label>
-        <input type="date" id="filter-from" />
-        <label for="filter-to">Until:</label>
-        <input type="date" id="filter-to" />
-        <button id="filter-go">Start</button>
-    </div>
 
-    <div>
-        <p class="timebox"><span id="currenttime"></span></p>
+        <!-- MITTE: Filter-Panel -->
+        <div class="header-center" id="filter-panel">
+            <label for="filter-text">Event:</label>
+            <select id="filter-text"></select>
+            <label for="filter-from">From:</label>
+            <input type="date" id="filter-from"/>
+            <label for="filter-to">Until:</label>
+            <input type="date" id="filter-to"/>
+            <button id="filter-go">Start</button>
+            <button id="reset-timeline">Reset Timeline</button>
+        </div>
+
+        <!-- RECHTS: Hamburger-Menü -->
+        <div class="header-right">
+            <button id="hamburger-btn" class="hamburger-btn" aria-label="Menü">☰</button>
+            <nav id="hamburger-menu" class="hamburger-menu hidden">
+                <a href="https://api.nasa.gov/" target="_blank">NASA API Info</a>
+                <a href="https://media3.giphy.com/..." target="_blank">FAQ</a>
+                <a href="register.html">Registrieren</a>
+            </nav>
+        </div>
     </div>
 </header>
+
 
 <!-- TIMELINE -->
 <main>
@@ -73,31 +86,76 @@
 </div>
 
 <!-- SCRIPTS -->
-<script src="scripts/app.js"></script>
 <script>
-    window.addEventListener('DOMContentLoaded', () => {
-        const username    = localStorage.getItem('username');
-        const loginLink   = document.getElementById('login-link');
-        const registerLink= document.getElementById('register-link');
-        const userInfo    = document.getElementById('user-info');
-        const logoutBtn   = document.getElementById('logout-btn');
+        // 1) JWT→Username
+        function getUsernameFromToken() {
+        const t = localStorage.getItem('jwt');
+        if (!t) return null;
+        try { return JSON.parse(atob(t.split('.')[1])).username; }
+        catch { return null; }
+    }
 
-        if (username) {
-            userInfo.textContent = 'Angemeldet: ' + username;
-            userInfo.classList.remove('hidden');
-            loginLink.classList.add('hidden');
-            registerLink.classList.add('hidden');
-            logoutBtn.classList.remove('hidden');
-        }
+        // 2) Login-Funktion
+        async function doLogin(u,p){
+        const res = await fetch('/api/login',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({username:u,password:p})
+    });
+        return res.json();
+    }
 
-        logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('username');
-            localStorage.removeItem('jwt');
-            window.location.href = '/';
-        });
+        document.addEventListener('DOMContentLoaded',()=>{
+        const form    = document.getElementById('login-form');
+        const errSpan = document.getElementById('login-error');
+        const userSp  = document.getElementById('user-info');
+        const outBtn  = document.getElementById('logout-btn');
+
+        // bereits eingeloggt?
+        const name = getUsernameFromToken();
+        if(name){
+        form.classList.add('hidden');
+        userSp.textContent = 'Angemeldet: '+name;
+        userSp.classList.remove('hidden');
+        outBtn.classList.remove('hidden');
+    }
+
+        form.addEventListener('submit', async e=>{
+        e.preventDefault();
+        errSpan.classList.add('hidden');
+        const u = document.getElementById('login-username').value;
+        const p = document.getElementById('login-password').value;
+        const d = await doLogin(u,p);
+        if(d.token){
+        localStorage.setItem('jwt',d.token);
+        form.classList.add('hidden');
+        userSp.textContent = 'Angemeldet: '+u;
+        userSp.classList.remove('hidden');
+        outBtn.classList.remove('hidden');
+    } else {
+        const msg = d.error||'Login fehlgeschlagen';
+        errSpan.textContent = msg;
+        errSpan.classList.remove('hidden');
+        if(confirm(msg+'\nKein Konto gefunden - Registrieren?')){
+        location.href='register.html';
+    }
+    }
+    });
+
+        outBtn.addEventListener('click',()=>{
+        localStorage.removeItem('jwt');
+        location.reload();
+    });
+
+        // Hamburger
+        document.getElementById('hamburger-btn')
+        .addEventListener('click',()=>{
+        document.getElementById('hamburger-menu')
+        .classList.toggle('hidden');
+    });
     });
 </script>
-<script src="../scripts/index.js"></script>
 <script src="../scripts/timeline.js"></script>
+<script src="../scripts/app.js"></script>
 </body>
 </html>

@@ -1,7 +1,11 @@
+/* main.css */
+
+/* Grundschriften */
 * {
     font-family: "Cascadia Code", "Cascadia Mono", serif;
 }
 
+/* Hintergrund-Settings */
 body {
     width: 100%;
     min-height: 100vh;
@@ -12,21 +16,20 @@ body {
     background-position: center;
 }
 
-.mainmenue a{
+/* Hauptmenü-Links (falls noch verwendet) */
+.mainmenue a {
     color: white;
     background-color: grey;
-    border: white 2px solid;
+    border: 2px solid white;
     text-align: center;
     padding: 5px;
     border-radius: 6px;
     box-sizing: border-box;
+    text-decoration: none;
 }
-.mainmenue a:hover{
+.mainmenue a:hover {
     color: black;
     background-color: cornflowerblue;
-    border: white 2px solid;
-    text-align: center;
-    padding: 5px;
 }
 
 /* Filter-Dropdown wie Menü-Button */
@@ -62,7 +65,7 @@ body {
     box-sizing: border-box;
 }
 
-/* Filter Labels*/
+/* Filter-Labels */
 #filter-panel label {
     display: inline-block;
     padding: 5px;
@@ -75,7 +78,7 @@ body {
     margin-right: 4px;
 }
 
-/* Hover-Effekte */
+/* Hover-Effekte für Filter-Controls */
 #filter-panel select:hover,
 #filter-panel input[type="date"]:hover,
 #filter-panel button:hover,
@@ -84,27 +87,97 @@ body {
     color: black;
 }
 
+/* Header über volle Breite, transparent */
+header,
+.header-container {
+    width: 100%;
+    margin: 0;
+    padding: 0.5em 1em;
+    background: transparent;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+}
 
-.timebox {
+/* Links, Mitte, Rechts jeweils als Flex-Box */
+.header-left,
+.header-center,
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+/* Mitte nimmt den restlichen Platz und zentriert Inhalt */
+.header-center {
+    flex: 1;
+    justify-content: center;
+    background: transparent;
+}
+
+/* Abstand links */
+.header-left > *:not(:first-child),
+.header-center > *:not(:first-child) {
+    margin-left: 0.5em;
+}
+
+/* Styling für Header-Items (User-Info, Login, Logout) */
+.header-left > * {
     color: white;
     background-color: grey;
-    border: white 2px solid;
-    width: 12vw;
-    text-align: center;
-    margin: 0;
+    border: 2px solid white;
     padding: 5px;
     border-radius: 6px;
     box-sizing: border-box;
+    text-decoration: none;
+    font-size: 0.9rem;
+    cursor: pointer;
 }
 
-header {
+/* Hover-Effekt für Header-Items */
+.header-left > *:hover {
+    background-color: cornflowerblue;
+    color: black;
+}
+
+/* Hamburger-Button */
+.hamburger-btn {
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;     /* weiß auf dunklem BG */
+    margin-left: 0.5em;
+    z-index: 101;
+}
+
+/* Hamburger-Menü */
+.header-right {
+    position: relative;
+}
+.hamburger-menu {
+    position: absolute;
+    top: 100%;
+    right: 0.5em;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 20px;
+    flex-direction: column;
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 102;
+}
+.hamburger-menu a {
+    padding: 0.5em 1em;
+    text-decoration: none;
+    color: #333;
+}
+.hamburger-menu a:hover {
+    background: #eee;
 }
 
-/*Favorite-Button*/
+/* Favorite-Button (falls verwendet) */
 .favorite-btn {
     color: white;
     background-color: grey;
@@ -115,18 +188,12 @@ header {
     box-sizing: border-box;
     cursor: pointer;
 }
-
 .favorite-btn:hover {
     background-color: cornflowerblue;
     color: black;
 }
 
-/* footer {
-    position: relative;
-    width: 100%;
-    background-color: cornflowerblue;
-    color: black;
-    text-align: center;
-    padding: 20px 5px 70px;
-    z-index: 1;
-} */
+/* Hidden-Klasse */
+.hidden {
+    display: none !important;
+}

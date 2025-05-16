@@ -1,33 +1,37 @@
-// routes/auth.js
-const { Router } = require('express');
-const bcrypt= require('bcrypt');
-const jwt= require('jsonwebtoken');
+const express = require('express');
+const jwt     = require('jsonwebtoken');
+const User    = require('../models/User');
+const router  = express.Router();
 
-const router = Router();
-
-// REGISTER
+// Registration
 router.post('/register', async (req, res) => {
-    const { username, password } = req.body;
-    const users = req.app.get('users');
-    if (users.find(u => u.username === username)) {
-        return res.status(400).json({ error: 'Username existiert bereits' });
+    try {
+        const { username, password } = req.body;
+        let user = new User({ username, password });
+        user = await user.save();
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ token });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
     }
-    const hash = await bcrypt.hash(password, 12);
-    users.push({ id: Date.now().toString(), username, hash, favorites: [] });
-    res.status(201).json({ message: 'User angelegt' });
 });
 
-// LOGIN
+// Login
 router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-    const users     = req.app.get('users');
-    const secret    = req.app.get('jwtSecret');
-    const user      = users.find(u => u.username === username);
-    if (!user || !(await bcrypt.compare(password, user.hash))) {
-        return res.status(401).json({ error: 'Ungültige Anmeldedaten' });
+    try {
+        const { username, password } = req.body;
+        const user = await User.findOne({ username });
+        if (!user || !(await user.comparePassword(password))) {
+            return res.status(401).json({ error: 'Ungültige Anmeldedaten' });
+        }
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ token });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
-    const token = jwt.sign({ id: user.id, username }, secret, { expiresIn: '2h' });
-    res.json({ token });
 });
 
 module.exports = router;
+
+
+

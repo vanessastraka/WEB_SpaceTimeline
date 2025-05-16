@@ -1,3 +1,6 @@
+require('dotenv').config();
+require('./db');
+
 const express = require('express');
 const path = require('path');
 
@@ -41,7 +44,7 @@ app.get('/fav', (req, res) => {
 app.set('users', []);
 
 // geheimes JWT-Key
-app.set('jwtSecret', 'supersecret');
+//app.set('jwtSecret', 'supersecret');
 
 
 console.log("Server now listening on http://localhost:3000/")

@@ -58,7 +58,7 @@
       }
       favorites.forEach(fav => {
         const li = document.createElement('li');
-        li.dataset.id = fav.id;
+        li.dataset.id = fav._id;
         li.innerHTML = `
           <strong>${fav.title}</strong> (Event: ${fav.eventId})<br>
           <textarea>${fav.note || ''}</textarea>

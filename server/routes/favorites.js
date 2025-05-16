@@ -1,7 +1,59 @@
 const express = require('express');
+const Favorite = require('../models/Favorite');
+const User     = require('../models/User');
+const authMiddleware = require('../middleware/auth'); // prüft JWT
+const router   = express.Router();
+
+router.use(authMiddleware);
+
+// Favoriten anlegen
+router.post('/', async (req, res) => {
+    const userId = req.userId;
+    const { title, eventId, note } = req.body;       // destrukturiere nur, was da ist
+    if (!title || !eventId) {
+        return res.status(400).json({ error: 'title und eventId sind erforderlich' });
+    }
+    const favorite = new Favorite({ title, eventId, note, createdBy: userId });
+    await favorite.save();
+    await User.findByIdAndUpdate(userId, { $push: { favorites: favorite._id } });
+    res.status(201).json(favorite);
+});
+
+// Alle Favoriten des Users ausliefern
+router.get('/', async (req, res) => {
+    const user = await User.findById(req.userId).populate('favorites');
+    res.json(user.favorites);
+});
+
+// Favoriten updaten
+router.put('/:id', async (req, res) => {
+    const fav = await Favorite.findOneAndUpdate(
+        { _id: req.params.id, createdBy: req.userId },
+        req.body,
+        { new: true }
+    );
+    res.json(fav);
+});
+
+// Favoriten löschen
+router.delete('/:id', async (req, res) => {
+    await Favorite.deleteOne({ _id: req.params.id, createdBy: req.userId });
+    // und aus User fetchen
+    await User.findByIdAndUpdate(req.userId, { $pull: { favorites: req.params.id } });
+    res.status(204).end();
+});
+
+module.exports = router;
+
+
+
+/*
+
+const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-// const favoritesController = require('../controllers/favoritesController');
+
+
 
 router.use((req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -83,6 +135,10 @@ router.delete('/:id', (req, res) => {
 });
 
 module.exports = router;
+
+
+
+ */
 
 // add favorite
 // router.put('/', favoritesController.putDonkiDataFavorites);

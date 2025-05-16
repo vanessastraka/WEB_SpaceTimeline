@@ -15,28 +15,35 @@ function api(path, opts={}) {
     return fetch(API+path, opts).then(r => r.json());
 }
 
-document.getElementById('register-form').onsubmit = async e => {
-    e.preventDefault();
-    msg.textContent = '';
-    const data = Object.fromEntries(new FormData(e.target));
-    const res = await api('/register', {method:'POST', body: JSON.stringify(data)});
-    msg.textContent = res.error || 'Registriert! Bitte einloggen.';
-};
-
+// Login
 document.getElementById('login-form').onsubmit = async e => {
     e.preventDefault();
-    msg.textContent = '';
-    const data = Object.fromEntries(new FormData(e.target));
-    const res = await api('/login', {method:'POST', body: JSON.stringify(data)});
+    const { username, password } = Object.fromEntries(new FormData(e.target));
+    const res = await api('/login', {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+    });
     if (res.token) {
         saveToken(res.token);
-        showApp(data.username);
+        showApp(username);
     } else {
         msg.textContent = res.error || 'Fehler beim Login';
     }
 };
 
-document.getElementById('logout').onclick = () => {
+// Registration
+document.getElementById('reg-form').onsubmit = async e => {
+    e.preventDefault();
+    const { username, password } = Object.fromEntries(new FormData(e.target));
+    const res = await api('/register', {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+    });
+    msg.textContent = res.error || 'Registriert! Bitte einloggen.';
+};
+
+
+document.getElementById('logout-btn').onclick = () => {
     clearToken();
     showLogin();
 };
@@ -53,10 +60,18 @@ function showLogin() {
     msg.textContent = '';
 }
 
+// token-utils.js
+export function getUsernameFromToken() {
+    const token = localStorage.getItem('jwt');
+    if (!token) return null;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.username;
+}
+
 // on load
-if (getToken()) {
-    // optional: validieren mit /profile-Endpoint
-    showApp('…');
+const savedUser = getUsernameFromToken();
+if (savedUser) {
+    showApp(savedUser);
 } else {
     showLogin();
 }

@@ -1,6 +1,7 @@
 // files/scripts/timeline.js
 
 //TODO - Synch anschauen, aktuell lädt es langsam
+//TODO - Firefox funktioniert, Chrome funktioniert nicht.. herausfinden!!
 
 // Global array for events
 let events = [];
@@ -53,7 +54,7 @@ function filterEvents({ textTerm, dateFrom, dateTo }) {
 }
 
 /**
- * 3) Zeichne die SVG-Timeline und mache Kästchen klickbar
+ * 3) Zeichne die Timeline und mache Kästchen klickbar
  */
 function drawTimeline(data) {
     const container = document.getElementById('timeline-container');
@@ -97,7 +98,7 @@ function drawTimeline(data) {
         // Sonne
         const img = document.createElementNS(svgNS, 'image');
         img.setAttribute('href', '/images/sun.png');
-        img.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '/images/sun.png');
+        img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '/images/sun.png');
         img.setAttribute('width', DOT_R * 2);
         img.setAttribute('height', DOT_R * 2);
         img.setAttribute('x', pt.x - DOT_R);
@@ -246,30 +247,30 @@ function showInfoPanel(item) {
 /**
  * 5) Start: DOMContentLoaded
  */
-document.addEventListener('DOMContentLoaded', async () => {
+(async function initTimeline(){
     try {
         await loadDonkiEvents();
-        // Filter-Dropdown
-        const select = document.getElementById('filter-text');
-        if (select) {
-            const opts = Array.from(new Set(events.map(e => e.text)));
-            select.innerHTML = '<option value="">All</option>' +
-                opts.map(t => `<option value="${t}">${t}</option>`).join('');
+        // Dropdown füllen
+        const sel = document.getElementById('filter-text');
+        if(sel){
+            sel.innerHTML = '<option value="">All</option>' +
+                Array.from(new Set(events.map(e=>e.text)))
+                    .map(t=>`<option>${t}</option>`).join('');
         }
         drawTimeline(events);
-        document.getElementById('filter-go')?.addEventListener('click', () => {
-            const criteria = {
-                textTerm: document.getElementById('filter-text')?.value || '',
-                dateFrom: document.getElementById('filter-from')?.value   || '',
-                dateTo:   document.getElementById('filter-to')?.value     || ''
-            };
-            const filtered = filterEvents(criteria);
-            drawTimeline(filtered);
-        });
-    } catch (err) {
-        console.error('Fehler beim Laden der Events:', err);
+        document.getElementById('filter-go')
+            ?.addEventListener('click',()=>{
+                drawTimeline(filterEvents({
+                    textTerm: document.getElementById('filter-text')?.value||'',
+                    dateFrom: document.getElementById('filter-from')?.value||'',
+                    dateTo:   document.getElementById('filter-to')?.value||''
+                }));
+            });
+    } catch(err){
+        console.error('Timeline-Init-Error',err);
     }
-});
+})();
+
 
 /**
  * 6) Toggle-Button
