@@ -19,11 +19,68 @@ router.post('/', async (req, res) => {
     res.status(201).json(favorite);
 });
 
+/**
+ * @swagger
+ * /favorites:
+ *   get:
+ *     summary: Retrieve all favorites of the authenticated user
+ *     tags: [Favorites]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of favorites
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 
+ */
+
 // Alle Favoriten des Users ausliefern
 router.get('/', async (req, res) => {
     const user = await User.findById(req.userId).populate('favorites');
     res.json(user.favorites);
 });
+
+/**
+ * @swagger
+ * /favorites/{id}:
+ *   put:
+ *     summary: Update a favorite entry by ID
+ *     tags: [Favorites]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the favorite to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             properties:
+ *               title:
+ *                 type: string
+ *               eventId:
+ *                 type: string
+ *               note:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Favorite successfully updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Favorite'
+ *       404:
+ *         description: Favorite not found
+ */
 
 // Favoriten updaten
 router.put('/:id', async (req, res) => {
@@ -34,6 +91,28 @@ router.put('/:id', async (req, res) => {
     );
     res.json(fav);
 });
+
+/**
+ * @swagger
+ * /favorites/{id}:
+ *   delete:
+ *     summary: Delete a favorite by ID
+ *     tags: [Favorites]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the favorite to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: Successfully deleted
+ *       404:
+ *         description: Favorite not found
+ */
 
 // Favoriten löschen
 router.delete('/:id', async (req, res) => {

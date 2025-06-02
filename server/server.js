@@ -8,6 +8,10 @@ const donkiRoutes = require('./routes/donki');
 const favoritesRoutes = require('./routes/favorites');
 const authRoutes = require('./routes/auth');
 
+// SWAGGER
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
+
 const app = express();
 app.use(express.json());
 app.listen(3000)
@@ -18,6 +22,7 @@ app.use(express.static(path.join(__dirname, "..", 'files', 'html')));
 
 // use route for donki data
 // Auth-Routes
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api', authRoutes);
 app.use('/api/donki', donkiRoutes);
 app.use('/api/favorites', favoritesRoutes);
