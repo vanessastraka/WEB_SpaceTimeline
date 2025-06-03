@@ -14,7 +14,7 @@ html, body {
     width: 100%;           /* fast volle Breite */
     max-width: none;       /* keine fixe Obergrenze */
     height: 500px;         /* gibt Platz für den Bogen */
-    margin: 150px 0 40px 0; /* oben/rechts/unten 40px, links 0 */
+    margin: 50px 0 40px 0; /* oben/rechts/unten 40px, links 0 */
     overflow: hidden;      /* versteckt Scrollbars */
     position: relative;
     cursor: grab;
@@ -165,4 +165,20 @@ html, body {
 }
 #fav-button:hover {
     background-color: #444;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .timeline-labels {
+    font-size: 0.8rem;
+  }
+
+  .filter-panel {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .event-box {
+    width: 100%;
+  }
 }
