@@ -1,7 +1,5 @@
 // files/scripts/timeline.js
-
-//TODO - Synch anschauen, aktuell lädt es langsam
-//TODO - Firefox funktioniert, Chrome funktioniert nicht.. herausfinden!!
+//TODO - Firefox funktioniert, Chrome funktioniert nicht.. herausfinde - KEIN PLAN!!!
 
 // Global array for events
 let events = [];
@@ -196,9 +194,15 @@ function drawTimeline(data) {
     container.scrollLeft = initialScroll;
 
     // Reset-Button
-    document.getElementById('reset-timeline')?.addEventListener('click', e => {
+    document.getElementById('reset-timeline')?.addEventListener('click', async e => {
         e.preventDefault();
-        container.scrollLeft = initialScroll;
+        // Filter zurücksetzen
+        document.getElementById('filter-text').value = '';
+        document.getElementById('filter-from').value = '';
+        document.getElementById('filter-to').value = '';
+        // Events wieder für Standard-Zeitraum laden
+        await loadDonkiEvents();
+        drawTimeline(events);
     });
 
     // Drag-to-Scroll
@@ -309,14 +313,30 @@ function showInfoPanel(item) {
                     .map(t=>`<option>${t}</option>`).join('');
         }
         drawTimeline(events);
-        document.getElementById('filter-go')
-            ?.addEventListener('click',()=>{
-                drawTimeline(filterEvents({
-                    textTerm: document.getElementById('filter-text')?.value||'',
-                    dateFrom: document.getElementById('filter-from')?.value||'',
-                    dateTo:   document.getElementById('filter-to')?.value||''
-                }));
-            });
+        document.getElementById('filter-go')?.addEventListener('click', async () => {
+            const eventType = document.getElementById('filter-text')?.value || '';
+            const start = document.getElementById('filter-from')?.value || '';
+            const end   = document.getElementById('filter-to')?.value || '';
+
+            // Wenn Zeitraum ausgewählt ist, hole neue Events vom Backend!
+            if (start && end) {
+                try {
+                    await loadDonkiEventsRange(start, end);
+                } catch (err) {
+                    alert('Fehler beim Laden der Events: ' + err.message);
+                    return;
+                }
+            }
+            // Wenn keine neuen Daten geladen wurden, sind events[] noch die Standarddaten
+
+            // Jetzt filtern (egal ob neue oder alte Events)
+            let filtered = events;
+            if (eventType) {
+                filtered = filtered.filter(e => e.text === eventType);
+            }
+            drawTimeline(filtered);
+        });
+
     } catch(err){
         console.error('Timeline-Init-Error',err);
     }
@@ -334,3 +354,35 @@ toggleButton.addEventListener('click', () => {
         ? '▼ Close'
         : '▲ Open';
 });
+
+
+
+/**
+ * 7) Filter-Timeline older events
+ */
+async function loadDonkiEventsRange(startDate, endDate) {
+    const res = await fetch(`/api/donki?startDate=${startDate}&endDate=${endDate}`);
+    if (!res.ok) throw new Error(`API-Error ${res.status}`);
+    const data = await res.json();
+
+    events = Object.entries(data)
+        .flatMap(([type, arr]) =>
+            arr.map(ev => {
+                let rawDate;
+                switch(type) {
+                    case 'GST': rawDate = ev.startTime; break;
+                    case 'IPS': rawDate = ev.eventTime; break;
+                    case 'FLR':
+                    default:    rawDate = ev.beginTime;
+                }
+                return {
+                    text:      type,
+                    date:      rawDate.slice(0,10),
+                    raw:       ev,
+                    eventType: type
+                };
+            })
+        )
+        .sort((a,b) => new Date(a.date) - new Date(b.date));
+}
+
