@@ -280,10 +280,11 @@ function showInfoPanel(item) {
                     'Authorization': 'Bearer ' + localStorage.getItem('jwt')
                 },
                 body: JSON.stringify({
-                    eventId: item.date,
+                    eventId: ev.gstID || ev.flrID || ev.activityID,
                     title: item.eventType,
-                    note: item.text,
-                    //note: "" // Optional später als Eingabefeld
+                    time: ev.startTime || ev.eventTime || ev.beginTime,
+                    location: ev.location || ev.sourceLocation || "-",
+                    note: "",
                 })
             });
             if (!res.ok) throw new Error('Favorit konnte nicht gespeichert werden');

@@ -1,4 +1,4 @@
-// handles favorites list of User
+/* // handles favorites list of User
 
 // importing service that calls the API-data
 const donkiService = require('../services/donkiService');
@@ -85,3 +85,4 @@ exports.deleteDonkiDataFavorites = async (req, res) => {
     }
 };
 
+*/

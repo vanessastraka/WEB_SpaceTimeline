@@ -9,11 +9,11 @@ router.use(requireAuth);
 // Favoriten anlegen
 router.post('/', async (req, res) => {
     const userId = req.userId;
-    const { title, eventId, note } = req.body;       // destrukturiere nur, was da ist
-    if (!title || !eventId) {
-        return res.status(400).json({ error: 'title und eventId sind erforderlich' });
+    const { title, eventId, time ,location, note } = req.body;       // destrukturiere nur, was da ist
+    if (!title || !eventId || !time ) {
+        return res.status(400).json({ error: 'title, time und eventId sind erforderlich' });
     }
-    const favorite = new Favorite({ title, eventId, note, createdBy: userId });
+    const favorite = new Favorite({ title, eventId, time, location, note, createdBy: userId });
     await favorite.save();
     await User.findByIdAndUpdate(userId, { $push: { favorites: favorite._id } });
     res.status(201).json(favorite);
