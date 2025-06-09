@@ -5,17 +5,20 @@ const loginForm = document.getElementById('login-form');
 const logoutBtn = document.getElementById('logout-btn');
 const userSpan  = document.getElementById('user-info');
 const msg       = document.getElementById('login-error');
+const toFavSite = document.getElementById('to-fav-site');
 
 // === Hilfsfunktionen für JWT und API ===
 function saveToken(t)   { localStorage.setItem('jwt', t); }
 function getToken()     { return localStorage.getItem('jwt'); }
 function clearToken()   { localStorage.removeItem('jwt'); }
+
 function getUsernameFromToken() {
     const token = getToken();
     if (!token) return null;
     try { return JSON.parse(atob(token.split('.')[1])).username; }
     catch { return null; }
 }
+
 function api(path, opts={}) {
     opts.headers = opts.headers || {};
     opts.headers['Content-Type'] = 'application/json';
@@ -32,12 +35,16 @@ function showApp(username) {
         userSpan.classList.remove('hidden');
     }
     if (logoutBtn) logoutBtn.classList.remove('hidden');
+
+    // Favorite-Link anzeigen
+    if (toFavSite) toFavSite.classList.remove('hidden');
 }
 function showLogin() {
     if (loginForm) loginForm.classList.remove('hidden');
     if (userSpan) userSpan.classList.add('hidden');
     if (logoutBtn) logoutBtn.classList.add('hidden');
     if (msg) msg.classList.add('hidden');
+    if (toFavSite) toFavSite.classList.add('hidden');
 }
 
 // === Login-Formular ===
