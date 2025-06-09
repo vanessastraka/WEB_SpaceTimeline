@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="../styles/css/main.css">
   <title>Favoriten</title>
   <style>
     body { font-family: Arial, sans-serif; max-width: 600px; margin: 2em auto; }
@@ -51,9 +52,11 @@
 
   <h3>Neuen Favoriten hinzufügen</h3>
   <form id="add-fav-form">
-    <input name="eventId" placeholder="Event ID" required>
-    <input name="title" placeholder="Titel" required>
-    <textarea name="note" placeholder="Notiz (optional)"></textarea>
+    <input name="eventId" placeholder="Event ID*" required>
+    <input name="title" placeholder="Titel*" required>
+    <input name="time" placeholder="Time*" required>
+    <input name="location" placeholder="Location">
+    <textarea name="note" placeholder="Notiz"></textarea>
     <button type="submit">Hinzufügen</button>
   </form>
 
@@ -123,6 +126,8 @@
         li.dataset.id = fav._id;
         li.innerHTML = `
           <strong>${fav.title}</strong> (Event: ${fav.eventId})<br>
+          <p>Time: ${fav.time}</p>
+          <p>Location: ${fav.location}</p>
           <textarea>${fav.note || ''}</textarea>
           <button class="save">Speichern</button>
           <button class="delete">Löschen</button>
@@ -179,6 +184,8 @@
       const formData = new FormData(e.target);
       const eventId = formData.get('eventId');
       const title = formData.get('title');
+      const time = formData.get('time');
+      const location = formData.get('location');
       const note = formData.get('note');
       try {
         const res = await fetch(apiUrl, {
@@ -187,7 +194,7 @@
             'Content-Type': 'application/json',
             Authorization: 'Bearer ' + token
           },
-          body: JSON.stringify({ eventId, title, note })
+          body: JSON.stringify({ eventId, title, time, location, note })
         });
         if (!res.ok) throw new Error('Fehler beim Hinzufügen');
         const newFav = await res.json();

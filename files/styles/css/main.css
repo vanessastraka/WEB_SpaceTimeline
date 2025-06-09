@@ -245,3 +245,11 @@ header,
     background-color: white;
     transition: all 0.2s ease-in-out;
 }
+
+h2 {
+    color: white;
+}
+
+#favorites-list li {
+    color: white;
+}
