@@ -2,6 +2,7 @@
 
 /* Der sichtbare Bereich – overflow hidden, Cursor zum Ziehen */
 
+
 body {
     width: 100%;
     min-height: 100vh;
@@ -283,4 +284,5 @@ html, body {
 #timeline-svg {
   transform: translateY(-47px);
 }
+
 }

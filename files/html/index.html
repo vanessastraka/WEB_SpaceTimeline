@@ -8,63 +8,68 @@
     <link rel="icon" type="image/apng" href="../images/favicon.png">
     <meta name="author" content="KLKM">
     <meta name="description" content="Project for ...">
-<<<<<<< HEAD
-    <title>SpaceTimeline</title>
-=======
     <title>SolarTimeline</title>
     <style>.hidden { display: none !important; }</style>
->>>>>>> 1d69b113eecf84b3597b0b5132b0da391a9f233c
 </head>
 <body>
 <!-- HEADER WITH LOGIN/REGISTER -->
 <header>
     <div class="header-container">
-        <!-- LINKS: User-Info + Login/Logout -->
+        <!-- Links: Logo -->
         <div class="header-left">
-            <!-- Login-Form -->
+            <span class="header-title">Solar Timeline</span>
+        </div>
+        <!-- Mitte: Filter -->
+        <div class="header-center" id="filter-panel">
+            <div class="filter-group">
+                <label for="filter-text">Events</label>
+                <select id="filter-text"></select>
+            </div>
+            <div class="filter-group">
+                <label for="filter-from">From</label>
+                <input type="date" id="filter-from">
+            </div>
+            <div class="filter-group">
+                <label for="filter-to">To</label>
+                <input type="date" id="filter-to">
+            </div>
+            <div class="filter-group btn-group">
+                <label style="opacity:0;pointer-events:none;">.</label> <!-- zum Ausrichten -->
+                <button id="filter-go">Start</button>
+            </div>
+            <div class="filter-group btn-group">
+                <label style="opacity:0;pointer-events:none;">.</label>
+                <button id="reset-timeline">Reset</button>
+            </div>
+        </div>
+        <!-- Rechts: User + Hamburger -->
+        <div class="header-right">
             <form id="login-form">
-                <input id="login-username" name="username" type="text"  placeholder="User" required >
-                <input id="login-password" name="password" type="password" placeholder="Passwort" required >
+                <input id="login-username" name="username" type="text" placeholder="Username" required>
+                <input id="login-password" name="password" type="password" placeholder="Password" required>
                 <button type="submit">Login</button>
                 <span id="login-error" class="hidden" aria-live="polite"></span>
             </form>
-            <!-- Nach Login: Username + Logout -->
-            <span id="user-info" class="hidden"></span>
+            <span id="user-info" class="user-info-display hidden"></span>
             <button id="logout-btn" class="hidden">Logout</button>
             <button id="dashboard-btn" class="hidden">Admin-Dashboard</button>
-        </div>
-
-
-        <!-- MITTE: Filter-Panel -->
-        <div class="header-center" id="filter-panel">
-            <label for="filter-text">Event:</label>
-            <select id="filter-text"></select>
-            <label for="filter-from">From:</label>
-            <input type="date" id="filter-from">
-            <label for="filter-to">Until:</label>
-            <input type="date" id="filter-to">
-            <button id="filter-go">Start</button>
-            <button id="reset-timeline">Reset Timeline</button>
-        </div>
-
-        <!-- RECHTS: Hamburger-Menü -->
-        <div class="header-right">
             <button id="hamburger-btn" class="hamburger-btn" aria-label="Menü">☰</button>
             <nav id="hamburger-menu" class="hamburger-menu hidden">
                 <a href="https://api.nasa.gov/" target="_blank">NASA API Info</a>
                 <a href="faq.html">FAQ</a>
                 <a href="apod.html">Picture of the DAY!</a>
-                <a href="register.html">Registrieren</a>
+                <a href="register.html">Register</a>
             </nav>
         </div>
     </div>
 </header>
 
 
+
 <!-- TIMELINE -->
 <main>
     <section id="timeline-section">
-        <h2>Timeline</h2>
+        <h2>IST DAS KUNST ODER KANN DAS WEG?</h2>
         <div id="timeline-container">
          <div id="timeline"></div>
         </div>
@@ -81,7 +86,7 @@
         </div>
         <div class="info-box">
             <h3>Event Information</h3>
-            <button id="fav-button" class="hidden">Zu Favoriten</button>
+            <button id="fav-button" class="hidden">To Favorites</button>
             <button id="fav-site" class="hidden" onclick="window.location.href='http://localhost:3000/fav'">Fav Site</button>
             <div class="event-box"></div>
         </div>
@@ -157,15 +162,15 @@
               window.location.href = "/admin.html";
           } else {
               form.classList.add('hidden');
-              userSp.textContent = 'Angemeldet: ' + u;
+              userSp.textContent = 'Logged in: ' + u;
               userSp.classList.remove('hidden');
               outBtn.classList.remove('hidden');
           }
       } else {
-          const msg = d.error || 'Login fehlgeschlagen';
+          const msg = d.error || 'Login error';
           errSpan.textContent = msg;
           errSpan.classList.remove('hidden');
-          if (confirm(msg + '\nKein Konto gefunden - Registrieren?')) {
+          if (confirm(msg + '\nNo user found - Register new user?')) {
               location.href = 'register.html';
           }
       }

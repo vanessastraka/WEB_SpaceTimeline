@@ -28,7 +28,7 @@ function api(path, opts={}) {
 function showApp(username) {
     if (loginForm) loginForm.classList.add('hidden');
     if (userSpan) {
-        userSpan.textContent = 'Angemeldet: ' + username;
+        userSpan.textContent = 'Logged in: ' + username;
         userSpan.classList.remove('hidden');
     }
     if (logoutBtn) logoutBtn.classList.remove('hidden');
