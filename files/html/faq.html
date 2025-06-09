@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/css/style.css">
+    <link rel="icon" type="image/apng" href="../images/favicon.png">
+    <meta name="author" content="KLKM">
+    <meta name="description" content="Solar Events FAQ - Frequently Asked Questions">
+    <title>FAQ | Solar Events</title>
+    <style>
+        /* Minimal extra styles for FAQ accordion */
+        .faq-section { max-width: 850px; margin: 2rem auto; background: #181e26; border-radius: 1.5rem; box-shadow: 0 6px 24px rgba(0,0,0,0.15); padding: 2rem; }
+        .faq-accordion { margin: 2rem 0 0 0; }
+        .faq-category { margin-bottom: 1.7rem; border-radius: 1rem; overflow: hidden; background: #212737; }
+        .faq-category-header {
+            background: #232946;
+            color: #ffd700;
+            font-size: 1.25rem;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            user-select: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            transition: background 0.15s;
+        }
+        .faq-category-header.active { background: #293366; color: #fffbc1; }
+        .faq-category-content { display: none; padding: 1.2rem 1.8rem 1.3rem 1.8rem; }
+        .faq-list { margin: 0; }
+        .faq-item { margin-bottom: 1.2rem; }
+        .faq-question {
+            background: none; border: none;
+            color: #4fc3f7;
+            font-size: 1.09rem; font-weight: bold; width: 100%;
+            text-align: left; cursor: pointer; padding: 0.6rem 0;
+            transition: color 0.2s;
+        }
+        .faq-question.active, .faq-question:hover { color: #ffd700; }
+        .faq-answer {
+            display: none;
+            padding: 0.5rem 0 0.8rem 1.2rem;
+            color: #eee; font-size: 1rem;
+            border-left: 3px solid #ffd700;
+            margin-left: 0.3rem;
+            margin-top: 0.1rem;
+            background: rgba(255,255,255,0.02);
+        }
+        @media (max-width: 600px) {
+            .faq-section { padding: 0.6rem; }
+            .faq-category-content { padding: 0.9rem 0.5rem 0.9rem 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-container">
+        <div class="header-top">
+            <h1>Frequently Asked Questions</h1>
+        </div>
+        <div class="header-bottom">
+            <div class="header-left"></div>
+            <div class="header-right">
+                <nav id="hamburger-menu" class="hamburger-menu hidden">
+                    <a href="index.html" target="_blank">Back Home</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="faq-section">
+        <h2 style="text-align:center;">Everything you need to know about Solar Events, APOD &amp; our Timeline</h2>
+        <div class="faq-accordion">
+
+            <!-- Solar Events -->
+            <div class="faq-category">
+                <button class="faq-category-header">🌞 Solar Events</button>
+                <div class="faq-category-content">
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <button class="faq-question">What is a solar flare?</button>
+                            <div class="faq-answer">A solar flare is a sudden burst of energy and light from the Sun’s surface, usually caused by intense magnetic activity. Flares can affect satellites and communications on Earth.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">What is a coronal mass ejection (CME)?</button>
+                            <div class="faq-answer">A CME is a huge bubble of plasma released from the Sun’s corona. If it hits Earth, it can trigger geomagnetic storms and beautiful auroras.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">Can solar events harm humans on Earth?</button>
+                            <div class="faq-answer">The atmosphere protects us from most solar radiation, but strong solar events can disrupt technology like satellites, GPS, and power grids.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">How do solar events affect auroras?</button>
+                            <div class="faq-answer">When solar particles from events like CMEs hit Earth’s magnetic field, they create dazzling auroras, especially near the poles.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">How often do major solar events occur?</button>
+                            <div class="faq-answer">Solar activity follows an 11-year cycle, with solar maximums having more frequent and intense events like flares and CMEs.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- APOD -->
+            <div class="faq-category">
+                <button class="faq-category-header">📸 Astronomy Picture of the Day (APOD)</button>
+                <div class="faq-category-content">
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <button class="faq-question">What is APOD?</button>
+                            <div class="faq-answer">APOD stands for Astronomy Picture of the Day. Every day, a new space-related image is shared with a short explanation by professional astronomers.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">Are APOD images free to use?</button>
+                            <div class="faq-answer">Most are public domain, but always check the copyright listed below each picture before using it for your own projects.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">Can I submit my own photo to APOD?</button>
+                            <div class="faq-answer">Yes! APOD features submissions from both professionals and amateurs. Check the official APOD site for submission guidelines.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">Who writes the APOD explanations?</button>
+                            <div class="faq-answer">The explanations are typically written by astronomers Dr. Robert Nemiroff and Dr. Jerry Bonnell.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Usage -->
+            <div class="faq-category">
+                <button class="faq-category-header">📅 How to use the Timeline</button>
+                <div class="faq-category-content">
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <button class="faq-question">How do I view solar events on the timeline?</button>
+                            <div class="faq-answer">Simply scroll horizontally or drag the timeline to browse events. Click any event for more detailed info, including Wikipedia links.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">How can I filter events?</button>
+                            <div class="faq-answer">Use the filter controls above the timeline to select event type and date range. Hit "Start" to apply the filter, or "Reset" to show all events from the last 14 days.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">What do the icons on the timeline mean?</button>
+                            <div class="faq-answer">Each icon represents a specific type of solar event (flare, geomagnetic storm, etc). Click an icon to see event details and external resources.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">Can I save events as favorites?</button>
+                            <div class="faq-answer">If you're logged in, you can save interesting events by clicking the star button in the event panel. Find them later in your favorites list!</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">Why does the timeline look different in Chrome and Firefox?</button>
+                            <div class="faq-answer">Some minor visual differences can happen because browsers render SVG and scrollbars slightly differently, but all features should work the same!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- General/User -->
+            <div class="faq-category">
+                <button class="faq-category-header">👤 User &amp; General</button>
+                <div class="faq-category-content">
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <button class="faq-question">Do I need an account to use this site?</button>
+                            <div class="faq-answer">You can view solar events and APOD without logging in. But if you want to save favorites or access personalized features, you’ll need to register or log in.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">How is my data protected?</button>
+                            <div class="faq-answer">We respect your privacy and use modern security techniques to protect your data. Check our Privacy Policy for full details.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">How do I report a bug or suggest a feature?</button>
+                            <div class="faq-answer">We love feedback! Please use the contact form or reach out via GitHub to report issues or suggest cool new features.</div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">Why do I sometimes see “No Wikipedia-Data available”?</button>
+                            <div class="faq-answer">Not every solar event type has a dedicated Wikipedia page, or the API might be temporarily unavailable. Try another event, or check back later!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<footer>
+    Copyright © 2025 KLKM
+</footer>
+
+<script>
+    // FAQ accordion for categories
+    document.querySelectorAll('.faq-category-header').forEach(header => {
+        header.addEventListener('click', function() {
+            const content = this.nextElementSibling;
+            const isOpen = this.classList.contains('active');
+            // Close all categories
+            document.querySelectorAll('.faq-category-header').forEach(h => h.classList.remove('active'));
+            document.querySelectorAll('.faq-category-content').forEach(c => c.style.display = 'none');
+            if (!isOpen) {
+                this.classList.add('active');
+                content.style.display = 'block';
+            }
+        });
+    });
+
+    // Open first category by default
+    document.querySelectorAll('.faq-category-header')[0].click();
+
+    // FAQ questions toggle
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const answer = this.nextElementSibling;
+            const isActive = this.classList.contains('active');
+            // Close others in same category
+            this.closest('.faq-list').querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+            this.closest('.faq-list').querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+            // Toggle this one
+            if (!isActive) {
+                this.classList.add('active');
+                answer.style.display = 'block';
+            }
+        });
+    });
+</script>
+</body>
+</html>
