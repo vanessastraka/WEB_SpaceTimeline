@@ -5,6 +5,7 @@ const express = require('express');
 const path = require('path');
 
 const donkiRoutes = require('./routes/donki');
+const wikimediaRoutes = require('./routes/wikimedia');
 const favoritesRoutes = require('./routes/favorites');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
@@ -21,12 +22,13 @@ app.listen(3000)
 app.use(express.static(path.join(__dirname, "..", 'files')));
 app.use(express.static(path.join(__dirname, "..", 'files', 'html')));
 
-// use route for donki data
+// use route for donki data and wikimedia data
 // Auth-Routes
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api', authRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/donki', donkiRoutes);
+app.use('/api/wikimedia', wikimediaRoutes);
 
 //make index.html reachable
 app.get("/", (req, res) => {

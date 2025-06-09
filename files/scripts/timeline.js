@@ -42,6 +42,53 @@ async function loadDonkiEvents() {
 }
 
 /**
+ * 1.b) Fetch Wikimedia-Events based on the event
+ */
+
+const wikiEventMap = {
+    FLR: 'Solar_Flare',
+    GST: 'Geomagnetic_storm',
+    IPS: 'Shock_waves_in_astrophysics'
+};
+
+// return the title for the event
+function getWikiTitleFromEventType(eventType) {
+    return wikiEventMap[eventType] || null;
+}
+
+async function loadWikimediaData(eventType, targetElement) {
+
+    // get the title for the call
+    const wikiTitle = getWikiTitleFromEventType(eventType);
+
+    // handeling for when no title is available
+    if (!wikiTitle) {
+        targetElement.textContent = 'No Wikipedia-Data available.';
+        console.warn(`No Wikipedia-Article for Event type ${eventType}`);
+        return;
+    }
+
+    // call the API and insert the data into the targetelement
+    try {
+        const res = await fetch(`/api/wikimedia/${encodeURIComponent(wikiTitle)}`);
+
+        if (!res.ok) {
+            throw new Error("No Wikipedia-Data available.");
+        }
+
+        const data = await res.json();
+
+        targetElement.innerHTML = `
+            <strong>${data.title}</strong>: ${data.summary}
+            <br><a href="${data.url}" target="_blank" rel="noopener noreferrer" class="wikiButton">Wikipedia Article</a>
+        `;
+    } catch (error) {
+        targetElement.textContent = 'No Wikipedia-Data available.';
+        console.error('Wikimedia API Error:', error);
+    }
+}
+
+/**
  * 2) Filterfunktion bleibt unverändert
  */
 function filterEvents({ textTerm, dateFrom, dateTo }) {
@@ -209,6 +256,10 @@ function showInfoPanel(item) {
     addRow('ID',         ev.gstID || ev.flrID || ev.activityID);
     addRow('Location',   ev.location || ev.sourceLocation || '–');
     eventBox.appendChild(table);
+
+    // Load Wikipedia Data
+    const wikiBox = panel.querySelector('.wikiText');
+    loadWikimediaData(item.eventType, wikiBox);
 
     // Event wird abgespeichert bei /fav
     const favBtn = document.getElementById('fav-button');
