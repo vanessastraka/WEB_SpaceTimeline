@@ -1,0 +1,382 @@
+/* ========== GRUNDEINSTELLUNGEN ========== */
+* {
+    font-family: "Cascadia Code", "Cascadia Mono", serif;
+}
+
+/* ========== HEADER ========== */
+
+.header-container {
+    width: 100%;
+    margin: 0;
+    padding: 0.5vw 1vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-left > *,
+.header-center > * {
+    margin-left: 0.2vw;
+}
+
+label {
+    color: black;
+    border: 2px solid black;
+    padding: 5px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.header-left > input {
+    color: white;
+    background-color: grey;
+    border: 2px solid white;
+    padding: 5px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.header-left > *:hover {
+    background-color: cornflowerblue;
+    color: black;
+}
+
+/* ========== NAVIGATION & BUTTONS ========== */
+.mainmenue a,
+#filter-panel button,
+#filter-panel select,
+#filter-panel input[type="date"],
+#reg-form button,
+.content-box a,
+button {
+    color: white;
+    background-color: grey;
+    border: 2px solid white;
+    padding: 5px;
+    text-align: center;
+    border-radius: 6px;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+.mainmenue a:hover,
+#filter-panel select:hover,
+#filter-panel input[type="date"]:hover,
+#filter-panel button:hover,
+#reg-form button:hover,
+.content-box a:hover,
+button:hover {
+    background-color: cornflowerblue;
+    color: black;
+}
+
+/* ========== INHALT ========== */
+h1 {
+    color: black;
+    background: rgba(0,0,0,0.5);
+    border: black 2px solid;
+    text-align: center;
+    padding: 1vw;
+}
+
+.header-bottom {
+    display: flex;
+    flex-direction: row;
+    gap: 5vw;
+    justify-content: center;
+    margin: 2vw;
+}
+
+footer {
+    color: black;
+    padding: 1vw;
+    margin-top: 1vw;
+    font-size: 0.9em;
+    bottom: 0;
+    width: 100%;
+    height: 1.5vh;
+}
+
+.content-box {
+    background-color:rgba(0, 0, 0, 0.2);
+    margin: 3vw;
+    padding: 3vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#reg-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+    margin-bottom: 3vw;
+}
+
+/* ========== APOD BILD ========== */
+.apod-picture {
+    max-width: 100%;
+    width: 50vh;
+    height: auto;
+    border: 2px solid white;
+    border-radius: 6px;
+}
+
+#picture-section figure {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.5);
+    gap: 2vw;
+    padding: 3vw;
+    margin: 0vw;
+}
+
+/* ========== favorites ============ */
+
+#favorites-list {
+  list-style: none;
+  padding: 0;
+  margin: 2vw 2vw;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vw;
+}
+
+#favorites-list li {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 1vw;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+#favorites-list li strong {
+  font-size: 1.1rem;
+  color: black;
+}
+
+#favorites-list p {
+  margin: 0.5em 0;
+  color: #333;
+}
+
+#favorites-list textarea {
+  width: 90%;
+  height: 4em;
+  margin-top: 0.5em;
+  padding: 0.5em;
+  font-family: inherit;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+#favorites-list button {
+  margin-top: 0.5em;
+  margin-right: 0.5em;
+  padding: 0.4em 1em;
+  border: 2px solid white;
+  background-color: grey;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#favorites-list button:hover {
+    background-color: cornflowerblue;
+    color: black;
+}
+
+#add-fav-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.add-fav-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fav-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#add-fav-form input,
+#add-fav-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#add-fav-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+#add-fav-form button {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#add-fav-form button:hover {
+    background-color: #155a9c;
+}
+
+/* ========== ADMIN DASHBOARD ========== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+  color: #555;
+}
+
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+code {
+  background-color: #eef;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+button.btn {
+  margin-bottom: 20px;
+}
+
+button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.msg {
+  margin-top: 10px;
+  font-weight: 500;
+  color: #2e7d32;
+  background-color: #e8f5e9;
+  padding: 10px 12px;
+  border-radius: 6px;
+  max-width: 600px;
+}
+
+
+/* ========== MEDIA QUERIES ========== */
+
+
+@media only screen and (max-width: 1100px) {
+    h1 {
+        font-size: 1.7rem;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .header-container {
+        flex-flow: column;
+    }
+
+    .header-bottom {
+        display: flex;
+        justify-content: center;
+    }
+
+}
+
+@media only screen and (max-width: 900px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+}
+
+@media only screen and (max-width: 770px) {
+    #picture-section figure {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    footer {
+        text-align: center;
+    }
+
+    #reg-form {
+        gap: 4vw;
+    }
+
+    .fav-box {
+        flex-direction: column;
+    }
+
+    #favorites-list li {
+        padding: 3vw;
+    }
+}
+
+@media only screen and (max-width: 510px) {
+    .header-bottom {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #reg-form {
+        gap: 6vw;
+    }
+
+    #reg-form div {
+        display: flex;
+        flex-direction: column;
+        gap: 2vw;
+    }
+}

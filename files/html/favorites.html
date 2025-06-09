@@ -4,28 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/apng" href="../images/favicon.png">
-  <link rel="stylesheet" href="../styles/css/main.css">
+  <link rel="stylesheet" href="../styles/css/style.css">
   <title>Favorites</title>
   <meta name="author" content="KLKM">
   <meta name="description" content="Favourites for the SolarTimeline">
 </head>
 <body>
 
-  <h2>Deine Favoriten</h2>
-  <button onclick="window.location.href='index.html'">Zurück zur Startseite</button>
-  <ul id="favorites-list"></ul>
+  <h1>Your Favorites</h1>
+  <button onclick="window.location.href='index.html'">Back to Home</button>
 
-  <h3>Neuen Favoriten hinzufügen</h3>
-  <form id="add-fav-form">
-    <input name="eventId" placeholder="Event ID*" required>
-    <input name="title" placeholder="Titel*" required>
-    <input name="time" placeholder="Time*" required>
-    <input name="location" placeholder="Location">
-    <textarea name="note" placeholder="Notiz"></textarea>
-    <button type="submit">Hinzufügen</button>
-  </form>
+  <div class="fav-box">
+    <ul id="favorites-list"></ul>
 
-  <p id="error" style="color:red;"></p>
+    <div class="add-fav-div">
+      <h3>Add New Favorite</h3>
+      <form id="add-fav-form">
+        <input name="eventId" placeholder="Event ID*" required>
+        <input name="title" placeholder="Titel*" required>
+        <input name="time" placeholder="Time*" required>
+        <input name="location" placeholder="Location">
+        <textarea name="note" placeholder="Note"></textarea>
+        <button type="submit">Add</button>
+      </form>
+    </div>
+  </div>
+
+  <p id="error" style="color:rgb(255, 128, 0);"></p>
   <script src="../scripts/app.js"></script>
 
   <script>
@@ -94,8 +99,8 @@
           <p>Time: ${fav.time}</p>
           <p>Location: ${fav.location}</p>
           <textarea>${fav.note || ''}</textarea>
-          <button class="save">Speichern</button>
-          <button class="delete">Löschen</button>
+          <button class="save">Save</button>
+          <button class="delete">Delete</button>
         `;
         list.appendChild(li);
       });

@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <title>Register</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles/css/main.css">
+  <link rel="stylesheet" href="styles/css/style.css">
   <link rel="icon" type="image/apng" href="../images/favicon.png">
   <meta name="author" content="KLKM">
   <meta name="description" content="Register for SolarTimeline">
@@ -14,17 +14,24 @@
 
 <body>
 
-<h2>Registrieren</h2>
-<form id="reg-form">
+  <div class="content-box">
+    <h1>Registrieren</h1>
+    <form id="reg-form">
+      <div>
+        <label for="username">Benutzername</label>
+        <input id="username" name="username" placeholder="User" required>
+      </div>
 
-  <label for="username">Benutzername</label>
-  <input id="username" name="username" placeholder="User" required>
+      <div>
+        <label for="password">Passwort</label>
+        <input id="password" name="password" type="password" placeholder="Passwort" required>
+      </div>
 
-  <label for="password">Passwort</label>
-  <input id="password" name="password" type="password" placeholder="Passwort" required>
+      <button type="submit">Registrieren</button>
+    </form>
 
-  <button type="submit">Registrieren</button>
-</form>
+    <a href="index.html">Back to Home</a>
+  </div>
 
 <p id="error" style="color:red" aria-live="polite"></p>
 
