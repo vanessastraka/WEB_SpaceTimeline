@@ -12,7 +12,7 @@ let events = [];
 async function loadDonkiEvents() {
     const end = new Date();
     const start = new Date(end);
-    start.setDate(end.getDate() - 30);
+    start.setDate(end.getDate() - 14);
     const fmt = d => d.toISOString().slice(0,10);
 
     const res = await fetch(`/api/donki?startDate=${fmt(start)}&endDate=${fmt(end)}`);

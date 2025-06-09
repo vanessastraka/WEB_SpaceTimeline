@@ -1,9 +1,15 @@
 // route for DONKI Data
 
 const express = require('express');
-// router basically a "mini-app" within main application -> allowing create + manage routes for specific sections of your code
+// router basically a "mini-app" within main application -> allowing to create + manage routes for specific sections of your code
 const router = express.Router();
 const donkiController = require('../controllers/donkiController')
+const { requireAdmin } = require('../middleware/auth');
+
+// Am Ende (NUR für Admin/Demo!):
+router.get('/admin/cacheinfo', requireAdmin, donkiController.getDonkiCacheInfo);
+router.post('/admin/clearcache', requireAdmin, donkiController.clearDonkiCache);
+
 
 /**
  * @swagger             

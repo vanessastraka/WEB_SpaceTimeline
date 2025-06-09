@@ -1,10 +1,10 @@
 const express = require('express');
 const Favorite = require('../models/Favorite');
 const User     = require('../models/User');
-const authMiddleware = require('../middleware/auth'); // prüft JWT
+const { requireAuth } = require('../middleware/auth'); // prüft JWT
 const router   = express.Router();
 
-router.use(authMiddleware);
+router.use(requireAuth);
 
 // Favoriten anlegen
 router.post('/', async (req, res) => {

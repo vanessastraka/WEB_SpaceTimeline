@@ -7,6 +7,7 @@ const path = require('path');
 const donkiRoutes = require('./routes/donki');
 const favoritesRoutes = require('./routes/favorites');
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin');
 
 // SWAGGER
 const swaggerUi = require('swagger-ui-express');
@@ -24,8 +25,8 @@ app.use(express.static(path.join(__dirname, "..", 'files', 'html')));
 // Auth-Routes
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api', authRoutes);
-app.use('/api/donki', donkiRoutes);
 app.use('/api/favorites', favoritesRoutes);
+app.use('/api/donki', donkiRoutes);
 
 //make index.html reachable
 app.get("/", (req, res) => {
@@ -48,8 +49,7 @@ app.get('/fav', (req, res) => {
 // in-memory Store (später gegen DB tauschen)
 app.set('users', []);
 
-// geheimes JWT-Key
-//app.set('jwtSecret', 'supersecret');
+app.use('/api/admin', adminRoutes);
 
 
 console.log("Server now listening on http://localhost:3000/")

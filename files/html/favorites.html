@@ -14,6 +14,7 @@
 <body>
 
   <h2>Deine Favoriten</h2>
+  <button onclick="window.location.href='index.html'">Zurück zur Startseite</button>
   <ul id="favorites-list"></ul>
 
   <h3>Neuen Favoriten hinzufügen</h3>
@@ -25,6 +26,35 @@
   </form>
 
   <p id="error" style="color:red;"></p>
+  <script src="../scripts/app.js"></script>
+
+  <script>
+    (async function(){
+      console.log("TEST: Session-Check startet");
+      const token = getToken();
+      console.log("TOKEN im LocalStorage:", token);
+      if (!token) {
+        document.getElementById('error').textContent = "Kein Token gefunden!";
+        return;
+      }
+      try {
+        const res = await fetch('/api/me', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        console.log("API/ME Response:", res);
+        const data = await res.json();
+        if (!res.ok) {
+          document.getElementById('error').textContent = "Session ungültig: " + (data.error || res.status);
+          return;
+        }
+        document.getElementById('error').textContent = "Angemeldet als: " + data.username;
+      } catch (err) {
+        document.getElementById('error').textContent = "Netzwerk- oder Serverfehler: " + err.message;
+        return;
+      }
+    })();
+  </script>
+
 
   <script>
     const apiUrl = '/api/favorites';

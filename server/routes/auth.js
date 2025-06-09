@@ -3,6 +3,8 @@ const jwt     = require('jsonwebtoken');
 const User    = require('../models/User');
 const router  = express.Router();
 
+const { requireAuth } = require('../middleware/auth');
+
 /**
  * @swagger
  * /register:
@@ -92,8 +94,19 @@ router.post('/login', async (req, res) => {
         if (!user || !(await user.comparePassword(password))) {
             return res.status(401).json({ error: 'Ungültige Anmeldedaten' });
         }
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+router.get('/me', requireAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select('username');
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        res.json({ username: user.username });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

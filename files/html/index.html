@@ -27,6 +27,7 @@
             <!-- Nach Login: Username + Logout -->
             <span id="user-info" class="hidden"></span>
             <button id="logout-btn" class="hidden">Logout</button>
+            <button id="dashboard-btn" class="hidden">Admin-Dashboard</button>
         </div>
 
 
@@ -88,15 +89,30 @@
 <!-- SCRIPTS -->
 <script>
         // 1) JWT→Username
-        function getUsernameFromToken() {
+    function getUsernameFromToken() {
         const t = localStorage.getItem('jwt');
         if (!t) return null;
         try { return JSON.parse(atob(t.split('.')[1])).username; }
         catch { return null; }
     }
 
+    function getUserRoleFromToken() {
+        const t = localStorage.getItem('jwt');
+        if (!t) return null;
+        try { return JSON.parse(atob(t.split('.')[1])).role || 'user'; }
+        catch { return 'user'; }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const dashboardBtn = document.getElementById('dashboard-btn');
+        if(getUserRoleFromToken() === "admin") {
+            dashboardBtn.classList.remove('hidden');
+            dashboardBtn.onclick = () => window.location.href = "/admin.html";
+        }
+    })
+
         // 2) Login-Funktion
-        async function doLogin(u,p){
+  async function doLogin(u,p){
         const res = await fetch('/api/login',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
@@ -120,27 +136,32 @@
         outBtn.classList.remove('hidden');
     }
 
-        form.addEventListener('submit', async e=>{
-        e.preventDefault();
-        errSpan.classList.add('hidden');
-        const u = document.getElementById('login-username').value;
-        const p = document.getElementById('login-password').value;
-        const d = await doLogin(u,p);
-        if(d.token){
-        localStorage.setItem('jwt',d.token);
-        form.classList.add('hidden');
-        userSp.textContent = 'Angemeldet: '+u;
-        userSp.classList.remove('hidden');
-        outBtn.classList.remove('hidden');
-    } else {
-        const msg = d.error||'Login fehlgeschlagen';
-        errSpan.textContent = msg;
-        errSpan.classList.remove('hidden');
-        if(confirm(msg+'\nKein Konto gefunden - Registrieren?')){
-        location.href='register.html';
-    }
-    }
-    });
+  form.addEventListener('submit', async e => {
+      e.preventDefault();
+      errSpan.classList.add('hidden');
+      const u = document.getElementById('login-username').value;
+      const p = document.getElementById('login-password').value;
+      const d = await doLogin(u, p);
+      if (d.token) {
+          localStorage.setItem('jwt', d.token);
+          const role = getUserRoleFromToken();
+          if (role === "admin") {
+              window.location.href = "/admin.html";
+          } else {
+              form.classList.add('hidden');
+              userSp.textContent = 'Angemeldet: ' + u;
+              userSp.classList.remove('hidden');
+              outBtn.classList.remove('hidden');
+          }
+      } else {
+          const msg = d.error || 'Login fehlgeschlagen';
+          errSpan.textContent = msg;
+          errSpan.classList.remove('hidden');
+          if (confirm(msg + '\nKein Konto gefunden - Registrieren?')) {
+              location.href = 'register.html';
+          }
+      }
+  });
 
         outBtn.addEventListener('click',()=>{
         localStorage.removeItem('jwt');

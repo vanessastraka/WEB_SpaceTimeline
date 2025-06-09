@@ -1,8 +1,11 @@
 // handles requests/resposnes (JSON)
 
-// importing service that calls the API
+// "importing" service that calls the API
 const donkiService = require('../services/donkiService');
 
+
+const donkiCache = {};
+const CACHE_TIME = 5 * 60 * 1000; // 5 Minuten
 
 
 // START VALIDATION PREPARATION
@@ -73,9 +76,20 @@ exports.getDonkiData = async (req, res) => {
 
         // check if range is max. 3 months
         const dateDiff = (endDateParsed - startDateParsed) / (1000 * 60 * 60 * 24);
-
         if (dateDiff > 90) {
             return res.status(400).json({ message: 'The date range cannot be longer than 3 months.' });
+        }
+    }
+
+    // Key für Cache bauen (abhängig von Events, Start- und End-Datum)
+    const cacheKey = JSON.stringify({ eventTypes, startDate, endDate });
+    const cached = donkiCache[cacheKey];
+    if (cached && (Date.now() - cached.timestamp < CACHE_TIME)) {
+        // Sofort aus dem Cache zurückgeben!
+        if (eventData) {
+            return res.json({ [eventData]: cached.data[eventData] });
+        } else {
+            return res.json(cached.data);
         }
     }
 
@@ -90,6 +104,11 @@ exports.getDonkiData = async (req, res) => {
         // filter the Data
         const filteredData = filterDonkiData(donkiData);
 
+        donkiCache[cacheKey] = {
+            data: filteredData,
+            timestamp: Date.now()
+        };
+
         // data gets returned in json format
         if (eventData) {
             // if one specific event, saved with the key for the filter function
@@ -98,6 +117,8 @@ exports.getDonkiData = async (req, res) => {
             // if all
             res.json(filteredData);
         }
+
+        console.log("[DONKI] Frische NASA-Daten gecached:", cacheKey);
 
     } catch (error) {
         console.error('Something went wrong during fetching Donki Data.', error);
@@ -140,6 +161,25 @@ function filterDonkiData(data) {
     }
 
     return filtered;
-} 
+}
+
+
+// Admin-API: Cache-Infos holen
+exports.getDonkiCacheInfo = (req, res) => {
+    const info = Object.entries(donkiCache).map(([key, value]) => ({
+        key,
+        timestamp: new Date(value.timestamp).toLocaleString(),
+        countGST: value.data.GST?.length || 0,
+        countIPS: value.data.IPS?.length || 0,
+        countFLR: value.data.FLR?.length || 0,
+    }));
+    res.json(info);
+};
+
+// Admin-API: Cache leeren
+exports.clearDonkiCache = (req, res) => {
+    Object.keys(donkiCache).forEach(k => delete donkiCache[k]);
+    res.json({ success: true, message: "DONKI-Cache wurde geleert." });
+};
 
 

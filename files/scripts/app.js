@@ -1,77 +1,96 @@
-const API = '/api';
-const msg = document.getElementById('msg');
-const lp  = document.getElementById('login-panel');
-const ap  = document.getElementById('app-panel');
-const userSpan = document.getElementById('user');
+// app.js – passend zu deinen HTML-IDs!
 
-function saveToken(t) { localStorage.setItem('jwt', t); }
-function getToken()    { return localStorage.getItem('jwt'); }
-function clearToken()  { localStorage.removeItem('jwt'); }
+// IDs aus deiner HTML
+const loginForm = document.getElementById('login-form');
+const logoutBtn = document.getElementById('logout-btn');
+const userSpan  = document.getElementById('user-info');
+const msg       = document.getElementById('login-error');
+
+// === Hilfsfunktionen für JWT und API ===
+function saveToken(t)   { localStorage.setItem('jwt', t); }
+function getToken()     { return localStorage.getItem('jwt'); }
+function clearToken()   { localStorage.removeItem('jwt'); }
+function getUsernameFromToken() {
+    const token = getToken();
+    if (!token) return null;
+    try { return JSON.parse(atob(token.split('.')[1])).username; }
+    catch { return null; }
+}
 function api(path, opts={}) {
     opts.headers = opts.headers || {};
     opts.headers['Content-Type'] = 'application/json';
     const token = getToken();
     if (token) opts.headers['Authorization'] = 'Bearer '+token;
-    return fetch(API+path, opts).then(r => r.json());
+    return fetch('/api'+path, opts).then(r => r.json());
 }
 
-// Login
-document.getElementById('login-form').onsubmit = async e => {
-    e.preventDefault();
-    const { username, password } = Object.fromEntries(new FormData(e.target));
-    const res = await api('/login', {
-        method: 'POST',
-        body: JSON.stringify({ username, password }),
-    });
-    if (res.token) {
-        saveToken(res.token);
-        showApp(username);
-    } else {
-        msg.textContent = res.error || 'Fehler beim Login';
-    }
-};
-
-// Registration
-document.getElementById('reg-form').onsubmit = async e => {
-    e.preventDefault();
-    const { username, password } = Object.fromEntries(new FormData(e.target));
-    const res = await api('/register', {
-        method: 'POST',
-        body: JSON.stringify({ username, password }),
-    });
-    msg.textContent = res.error || 'Registriert! Bitte einloggen.';
-};
-
-
-document.getElementById('logout-btn').onclick = () => {
-    clearToken();
-    showLogin();
-};
-
+// === UI-Funktionen ===
 function showApp(username) {
-    lp.classList.add('hidden');
-    ap.classList.remove('hidden');
-    userSpan.textContent = username;
+    if (loginForm) loginForm.classList.add('hidden');
+    if (userSpan) {
+        userSpan.textContent = 'Angemeldet: ' + username;
+        userSpan.classList.remove('hidden');
+    }
+    if (logoutBtn) logoutBtn.classList.remove('hidden');
 }
-
 function showLogin() {
-    ap.classList.add('hidden');
-    lp.classList.remove('hidden');
-    msg.textContent = '';
+    if (loginForm) loginForm.classList.remove('hidden');
+    if (userSpan) userSpan.classList.add('hidden');
+    if (logoutBtn) logoutBtn.classList.add('hidden');
+    if (msg) msg.classList.add('hidden');
 }
 
-// token-utils.js
-export function getUsernameFromToken() {
-    const token = localStorage.getItem('jwt');
-    if (!token) return null;
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.username;
+// === Login-Formular ===
+if (loginForm) {
+    loginForm.onsubmit = async e => {
+        e.preventDefault();
+        if (msg) msg.classList.add('hidden');
+        const u = loginForm.username.value;
+        const p = loginForm.password.value;
+        const res = await api('/login', {
+            method: 'POST',
+            body: JSON.stringify({ username: u, password: p }),
+        });
+        if (res.token) {
+            saveToken(res.token);
+            showApp(u);
+        } else if (msg) {
+            msg.textContent = res.error || 'Fehler beim Login';
+            msg.classList.remove('hidden');
+        }
+    };
 }
 
-// on load
-const savedUser = getUsernameFromToken();
-if (savedUser) {
-    showApp(savedUser);
-} else {
-    showLogin();
+// === Logout ===
+if (logoutBtn) {
+    logoutBtn.onclick = () => {
+        clearToken();
+        showLogin();
+    };
 }
+
+// === Session-Check ===
+async function checkSession() {
+    const token = getToken();
+    if (!token) {
+        showLogin();
+        return;
+    }
+    // Hole Username über /api/me, wenn vorhanden
+    try {
+        const res = await fetch('/api/me', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        showApp(data.username);
+    } catch {
+        clearToken();
+        showLogin();
+    }
+}
+
+// === Initialisierungs-Logik ===
+window.addEventListener('DOMContentLoaded', () => {
+    checkSession();
+});

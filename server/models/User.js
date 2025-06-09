@@ -5,7 +5,8 @@ const bcrypt = require('bcrypt');
 const UserSchema = new Schema({
     username:    { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    favorites: [{ type: Schema.Types.ObjectId, ref: 'Favorite' }]
+    favorites: [{ type: Schema.Types.ObjectId, ref: 'Favorite' }],
+    role: {type : String, default: 'user'}
 });
 
 // Passwort vor dem Speichern hashen

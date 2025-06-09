@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; max-width: 700px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 0.5em; text-align: left; }
+    th { background: #eee; }
+    .btn { padding: 0.5em 1em; margin-top: 1em; }
+    .msg { color: green; margin-top: 1em; }
+  </style>
+</head>
+<body>
+<h1>Admin Dashboard</h1>
+<h2>DONKI-Cache Übersicht</h2>
+<table id="cache-table">
+  <thead>
+  <tr>
+    <th>Key</th>
+    <th>Timestamp</th>
+    <th>GST</th>
+    <th>IPS</th>
+    <th>FLR</th>
+  </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<button class="btn" id="clear-cache-btn">Cache leeren</button>
+<h2>Benutzerverwaltung</h2>
+<table id="users-table">
+  <thead>
+  <tr>
+    <th>Username</th>
+    <th>Rolle</th>
+    <th>Aktion</th>
+  </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<button onclick="window.location.href='/index.html'">Zurück zur Startseite</button>
+<div class="msg" id="admin-msg"></div>
+
+<script>
+  function getUserRoleFromToken() {
+    const t = localStorage.getItem('jwt');
+    if (!t) return null;
+    try { return JSON.parse(atob(t.split('.')[1])).role || 'user'; }
+    catch { return 'user'; }
+  }
+  // Direkt beim Laden weiterleiten, falls kein Admin:
+  if (getUserRoleFromToken() !== "admin") {
+    window.location.href = "/index.html";
+  }
+
+  async function loadCacheInfo() {
+    const res = await fetch('/api/donki/admin/cacheinfo', {
+      headers: { Authorization: 'Bearer ' + localStorage.getItem('jwt') }
+    });
+    const data = await res.json();
+    const tbody = document.getElementById('cache-table').querySelector('tbody');
+
+    tbody.innerHTML = '';
+
+    if (getUserRoleFromToken() !== "admin") {
+      window.location.href = "/index.html";
+    }
+
+    if(data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5"><em>Kein Cache aktiv</em></td></tr>';
+    } else {
+      data.forEach(row => {
+        tbody.innerHTML += `<tr>
+            <td><code>${row.key}</code></td>
+            <td>${row.timestamp}</td>
+            <td>${row.countGST}</td>
+            <td>${row.countIPS}</td>
+            <td>${row.countFLR}</td>
+          </tr>`;
+      });
+    }
+  }
+  document.getElementById('clear-cache-btn').onclick = async () => {
+    const res = await fetch('/api/donki/admin/clearcache', { method: 'POST' });
+    const data = await res.json();
+    document.getElementById('admin-msg').textContent = data.message;
+    await loadCacheInfo();
+    setTimeout(() => document.getElementById('admin-msg').textContent = '', 3000);
+  };
+
+  // Initial laden & regelmäßig aktualisieren
+  loadCacheInfo();
+  setInterval(loadCacheInfo, 15000); // alle 15 Sekunden automatisch aktualisieren
+
+  async function loadUsers() {
+    const res = await fetch('/api/admin/users', {
+      headers: { Authorization: 'Bearer ' + localStorage.getItem('jwt') }
+    });
+    const data = await res.json();
+    const tbody = document.getElementById('users-table').querySelector('tbody');
+    tbody.innerHTML = '';
+    if (!Array.isArray(data)) {
+      tbody.innerHTML = '<tr><td colspan="3" style="color:red;">Fehler beim Laden!</td></tr>';
+      return;
+    }
+    data.forEach(user => {
+      tbody.innerHTML += `<tr>
+      <td>${user.username}</td>
+      <td>${user.role}</td>
+      <td>
+        <button onclick="deleteUser('${user._id}')">Löschen</button>
+        <button onclick="makeAdmin('${user._id}')">Als Admin setzen</button>
+        <button onclick="makeUser('${user._id}')">Als User setzen</button>
+      </td>
+    </tr>`;
+    });
+  }
+
+  async function deleteUser(id) {
+    if (!confirm('User wirklich löschen?')) return;
+    await fetch(`/api/admin/users/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: 'Bearer ' + localStorage.getItem('jwt') }
+    });
+    loadUsers();
+  }
+
+  async function makeAdmin(id) {
+    await fetch(`/api/admin/users/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('jwt')
+      },
+      body: JSON.stringify({ role: 'admin' })
+    });
+    loadUsers();
+  }
+
+  async function makeUser(id) {
+    await fetch(`/api/admin/users/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('jwt')
+      },
+      body: JSON.stringify({ role: 'user' })
+    });
+    loadUsers();
+  }
+
+  // Beim Laden:
+  loadUsers();
+
+</script>
+</body>
+</html>
