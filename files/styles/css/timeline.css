@@ -2,13 +2,23 @@
 
 /* Der sichtbare Bereich – overflow hidden, Cursor zum Ziehen */
 
-html, body {
-    margin: 0;
-    padding: 0;
+body {
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     overflow-x: hidden;
-  }
+    background-image: url(../../images/background_stars.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
 
 #timeline-container {
     width: 100%;           /* fast volle Breite */
@@ -165,6 +175,48 @@ html, body {
 }
 #fav-button:hover {
     background-color: #444;
+}
+
+/* Wikipedia Article Button */
+
+.wikiButton {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background-color: grey;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.wikiButton:hover {
+    background-color: white;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Favorite-Button (falls verwendet) */
+.favorite-btn {
+    color: white;
+    background-color: grey;
+    border: 2px solid white;
+    padding: 5px;
+    text-align: center;
+    border-radius: 6px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.favorite-btn:hover {
+    background-color: cornflowerblue;
+    color: black;
+}
+
+/* Hidden-Klasse */
+.hidden {
+    display: none !important;
 }
 
 /* Responsive adjustments for mobile */
