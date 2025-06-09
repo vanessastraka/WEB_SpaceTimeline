@@ -1,0 +1,55 @@
+/* style.css */
+
+/* FONT */
+* {
+    font-family: "Cascadia Code", "Cascadia Mono", serif;
+}
+
+body {
+    max-height: 100vh;
+    overflow-x: hidden;
+    background-image: url(../../images/background_stars.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    padding: 2vw;
+}
+
+.apod-picture {
+    width: 50vh;
+}
+
+#picture-section figure {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.5);
+    gap: 2vw;
+    padding: 3vw;
+    margin: 0vw;
+}
+
+h1 {
+    color: beige;
+    background: rgba(0,0,0,0.5);
+    border: beige 2px solid;
+    text-align: center;
+    padding: 1vw;
+}
+
+.header-bottom {
+    display: flex;
+    flex-direction: row;
+    gap: 5vw;
+    justify-content: center;
+    margin: 2vw;
+}
+
+footer {
+    color: white;
+    background: rgba(0,0,0,0.5);
+    padding: 1vw;
+    margin-top: 1vw;
+
+}

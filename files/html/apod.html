@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/css/style.css">
+    <script src="../scripts/apod.js"></script>
+    <link rel="icon" type="image/apng" href="../images/favicon.png">
+    <meta name="author" content="KLKM">
+    <meta name="description" content="APOD - get the picture of the day">
+    <title>Picture of the DAY!</title>
+</head>
+
+<body>
+<header>
+    <div class="header-container">
+
+        <div class="header-top">
+            <h1>Astronomy Picture of the Day!</h1>
+        </div>
+
+        <div class="header-bottom"> 
+
+            <div class="header-left" id="filter-panel">
+                <label for="filter-date">Date:</label>
+                <input type="date" id="filter-date">
+                <button id="filter-go">Start</button>
+                <button id="reset-timeline">Reset</button>
+            </div>
+
+            <div class="header-right">
+                <nav id="hamburger-menu" class="hamburger-menu hidden">
+                    <a href="index.html" target="_blank">Back Home</a>
+                </nav>
+            </div>
+
+        </div>
+
+    </div>
+</header>
+
+<main>
+    <section id="picture-section">
+        <figure>
+            <img class="apod-picture">
+            <figcaption>
+                <h2 id="title"></h2>
+                | <span id="date"></span> | <span id="copyright"></span> |
+                <br><br> <span id="explanation"></span>
+            </figcaption>
+        </figure>
+    </section>
+</main>
+
+<footer>Copyright © 2025 KLKM</footer>

@@ -57,7 +57,7 @@ exports.fetchDonkiData = async (eventTypes, startDate, endDate) => {
 }
 
 
-// service function to get DONKI Data by ID fpr favorites
+/* // service function to get DONKI Data by ID fpr favorites
 exports.fetchEventById = async (eventType, id) => {
     try {
         // using same date range as in fetchDonkiData
@@ -90,4 +90,4 @@ exports.fetchEventById = async (eventType, id) => {
         console.error(`Error fetching ${eventType} from DONKI:`, err.message);
         return null;
     }
-};
+}; */

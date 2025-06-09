@@ -6,6 +6,7 @@ const path = require('path');
 
 const donkiRoutes = require('./routes/donki');
 const wikimediaRoutes = require('./routes/wikimedia');
+const apodRoutes = require('./routes/apod');
 const favoritesRoutes = require('./routes/favorites');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
@@ -29,6 +30,7 @@ app.use('/api', authRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/donki', donkiRoutes);
 app.use('/api/wikimedia', wikimediaRoutes);
+app.use('/api/apod', apodRoutes);
 
 //make index.html reachable
 app.get("/", (req, res) => {
