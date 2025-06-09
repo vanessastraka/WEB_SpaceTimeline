@@ -181,4 +181,54 @@ html, body {
   .event-box {
     width: 100%;
   }
+
+  #info-panel.expanded {
+    max-height: 100vh;
+  }
+
+  .info-content {
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 10px;
+
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 10px;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .info-box {
+    box-sizing: border-box;
+    width: 100%;
+    flex: 1 1 auto;
+    margin: 0 auto;
+  }
+
+  .related-image-box img {
+    max-height: 135px;
+    object-fit: cover;
+  }
+#timeline-container {
+  margin-top: 10px;
+  margin-bottom: 80px;
+  height: 450px; 
+  position: relative;
+}
+
+  .timeline-labels {
+    margin-top: 0;
+  }
+
+#info-panel {
+  margin-top: 0;
+  position: fixed;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.sun-image-container, 
+#timeline-svg {
+  transform: translateY(-47px);
+}
 }
