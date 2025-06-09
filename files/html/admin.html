@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../styles/css/main.css">
+    <link rel="stylesheet" href="../styles/css/style.css">
     <link rel="icon" type="image/apng" href="../images/favicon.png">
     <title>Admin Dashboard</title>
     <meta name="author" content="KLKM">
@@ -12,7 +12,7 @@
 </head>
 <body>
 <h1>Admin Dashboard</h1>
-<h2>DONKI-Cache Übersicht</h2>
+<h2>DONKI-Cache Overview</h2>
 <table id="cache-table">
   <thead>
   <tr>
@@ -25,20 +25,20 @@
   </thead>
   <tbody></tbody>
 </table>
-<button class="btn" id="clear-cache-btn">Cache leeren</button>
-<h2>Benutzerverwaltung</h2>
+<button class="btn" id="clear-cache-btn">Empty Cache</button>
+<h2>User Administration</h2>
 <table id="users-table">
   <thead>
   <tr>
     <th>Username</th>
-    <th>Rolle</th>
-    <th>Aktion</th>
+    <th>Role</th>
+    <th>Action</th>
   </tr>
   </thead>
   <tbody></tbody>
 </table>
 
-<button onclick="window.location.href='/index.html'">Zurück zur Startseite</button>
+<button onclick="window.location.href='/index.html'">Back to Home</button>
 <div class="msg" id="admin-msg"></div>
 
 <script>
@@ -108,9 +108,9 @@
       <td>${user.username}</td>
       <td>${user.role}</td>
       <td>
-        <button onclick="deleteUser('${user._id}')">Löschen</button>
-        <button onclick="makeAdmin('${user._id}')">Als Admin setzen</button>
-        <button onclick="makeUser('${user._id}')">Als User setzen</button>
+        <button onclick="deleteUser('${user._id}')">Delete</button>
+        <button onclick="makeAdmin('${user._id}')">Set as Admin</button>
+        <button onclick="makeUser('${user._id}')">Set as User</button>
       </td>
     </tr>`;
     });
