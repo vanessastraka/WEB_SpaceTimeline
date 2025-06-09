@@ -1,18 +1,30 @@
 <!DOCTYPE html>
+
 <html lang="de">
+
 <head>
   <meta charset="UTF-8">
   <title>Registrieren</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles/css/main.css">
 </head>
+
 <body>
+
 <h2>Registrieren</h2>
 <form id="reg-form">
-  <input name="username" placeholder="User" required>
-  <input name="password" type="password" placeholder="Passwort" required>
+
+  <label for="username">Benutzername</label>
+  <input id="username" name="username" placeholder="User" required>
+
+  <label for="password">Passwort</label>
+  <input id="password" name="password" type="password" placeholder="Passwort" required>
+
   <button type="submit">Registrieren</button>
 </form>
-<p id="error" style="color:red"></p>
+
+<p id="error" style="color:red" aria-live="polite"></p>
+
 <script>
   document.getElementById('reg-form').addEventListener('submit', async e => {
     e.preventDefault();
@@ -30,5 +42,7 @@
     }
   });
 </script>
+
 </body>
+
 </html>

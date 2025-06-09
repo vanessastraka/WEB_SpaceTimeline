@@ -24,7 +24,7 @@ const options = {
     },
     security: [{ bearerAuth: [] }],
   },
-  apis: [path.join(__dirname, 'routes', '*.js')],
+  apis: [path.join(__dirname, 'routes', '*.js')], 
 };
 
 const swaggerJSDoc = require('swagger-jsdoc');

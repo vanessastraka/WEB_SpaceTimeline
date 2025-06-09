@@ -19,10 +19,10 @@
         <div class="header-left">
             <!-- Login-Form -->
             <form id="login-form">
-                <input id="login-username" name="username" type="text"  placeholder="User"     required />
-                <input id="login-password" name="password" type="password" placeholder="Passwort" required />
+                <input id="login-username" name="username" type="text"  placeholder="User" required >
+                <input id="login-password" name="password" type="password" placeholder="Passwort" required >
                 <button type="submit">Login</button>
-                <span id="login-error" class="hidden"></span>
+                <span id="login-error" class="hidden" aria-live="polite"></span>
             </form>
             <!-- Nach Login: Username + Logout -->
             <span id="user-info" class="hidden"></span>
@@ -36,9 +36,9 @@
             <label for="filter-text">Event:</label>
             <select id="filter-text"></select>
             <label for="filter-from">From:</label>
-            <input type="date" id="filter-from"/>
+            <input type="date" id="filter-from">
             <label for="filter-to">Until:</label>
-            <input type="date" id="filter-to"/>
+            <input type="date" id="filter-to">
             <button id="filter-go">Start</button>
             <button id="reset-timeline">Reset Timeline</button>
         </div>
@@ -58,12 +58,13 @@
 
 <!-- TIMELINE -->
 <main>
-    <div id="timeline-container">
-        <div id="timeline"></div>
-    </div>
+    <section id="timeline-section">
+        <h2>Timeline</h2>
+        <div id="timeline-container">
+         <div id="timeline"></div>
+        </div>
+    </section>
 </main>
-
-<footer>Copyright © 2025 KLKM</footer>
 
 <!-- INFO PANEL -->
 <div id="info-panel">
@@ -76,15 +77,17 @@
         <div class="info-box">
             <h3>Event Information</h3>
             <button id="fav-button" class="hidden">Zu Favoriten</button>
-            <a href="http://localhost:3000/fav"><button id="fav-site" class="hidden">Fav Site</button></a>
+            <button id="fav-site" class="hidden" onclick="window.location.href='http://localhost:3000/fav'">Fav Site</button>
             <div class="event-box"></div>
         </div>
         <div class="info-box related-image-box">
             <h3>Related Image</h3>
-            <img src="https://d.newsweek.com/en/full/2519753/illustration-solar-flare.jpg" alt="Related Image" />
+            <img src="https://d.newsweek.com/en/full/2519753/illustration-solar-flare.jpg" alt="Related Image" >
         </div>
     </div>
 </div>
+
+<footer>Copyright © 2025 KLKM</footer>
 
 <!-- SCRIPTS -->
 <script>
