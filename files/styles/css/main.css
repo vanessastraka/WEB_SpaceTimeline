@@ -221,7 +221,7 @@ header,
   #filter-panel select,
   #filter-panel input,
   #filter-panel button {
-    width: auto; /* Don't force full width */
+    width: auto;
   }
 }
 
