@@ -4,9 +4,9 @@
 // Global array for events
 let events = [];
 
-/**
- * 1) Fetch DONKI-Events der letzten 30 Tage vom eigenen Backend
- */
+
+ //Fetch von DONKI-Events der letzten 30 Tage vom eigenen Backend
+
 async function loadDonkiEvents() {
     const end = new Date();
     const start = new Date(end);
@@ -39,10 +39,8 @@ async function loadDonkiEvents() {
         .sort((a,b) => new Date(a.date) - new Date(b.date));
 }
 
-/**
- * 1.b) Fetch Wikimedia-Events based on the event
- */
 
+ // Fetches Wikimedia-Events based on the event
 const wikiEventMap = {
     FLR: 'Solar_Flare',
     GST: 'Geomagnetic_storm',
@@ -86,9 +84,9 @@ async function loadWikimediaData(eventType, targetElement) {
     }
 }
 
-/**
- * 2) Filterfunktion bleibt unverändert
- */
+
+ // Filterfunktion bleibt unverändert
+
 function filterEvents({ textTerm, dateFrom, dateTo }) {
     return events.filter(item => {
         if (textTerm && !item.text.toLowerCase().includes(textTerm.toLowerCase())) return false;
@@ -98,9 +96,9 @@ function filterEvents({ textTerm, dateFrom, dateTo }) {
     });
 }
 
-/**
- * 3) Zeichne die Timeline und mache Kästchen klickbar
- */
+
+ //Zeichnet die Timeline und macht Kästchen klickbar
+
 function drawTimeline(data) {
     const container = document.getElementById('timeline-container');
     // Container leeren

@@ -179,7 +179,7 @@ exports.getDonkiCacheInfo = (req, res) => {
 // Admin-API: Cache leeren
 exports.clearDonkiCache = (req, res) => {
     Object.keys(donkiCache).forEach(k => delete donkiCache[k]);
-    res.json({ success: true, message: "DONKI-Cache wurde geleert." });
+    res.json({ success: true, message: "DONKI-Cache was deleted." });
 };
 
 

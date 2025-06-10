@@ -57,10 +57,6 @@ app.get('/fav', (req, res) => {
   res.sendFile(path.join(__dirname, "..", "files", "html", "favorites.html"));
 });
 
-// in-memory Store (später gegen DB tauschen)
-app.set('users', []);
-
 app.use('/api/admin', adminRoutes);
-
 
 console.log("Server now listening on http://localhost:3000/")

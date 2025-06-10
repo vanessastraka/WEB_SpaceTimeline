@@ -124,7 +124,7 @@
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
   async function deleteUser(id) {
-    if (!confirm('User wirklich löschen?')) return;
+    if (!confirm('Really delete user?')) return;
     await fetch(`/api/admin/users/${id}`, {
       method: 'DELETE',
       headers: { Authorization: 'Bearer ' + localStorage.getItem('jwt') }

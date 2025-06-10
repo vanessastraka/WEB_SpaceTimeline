@@ -77,7 +77,7 @@ if (loginForm) {
             saveToken(res.token);
             showApp(u);
         } else if (msg) {
-            msg.textContent = res.error || 'Fehler beim Login';
+            msg.textContent = res.error || 'Error while logging in.';
             msg.classList.remove('hidden');
         }
     };
