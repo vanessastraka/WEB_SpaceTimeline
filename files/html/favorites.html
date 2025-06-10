@@ -124,6 +124,7 @@
       const li = e.target.closest('li');
       if (!li) return;
       const id = li.dataset.id;
+      //Save Favorite Function
       if (e.target.classList.contains('save')) {
         const note = li.querySelector('textarea').value;
         try {
@@ -140,6 +141,7 @@
         } catch (err) {
           errorElem.textContent = err.message;
         }
+        //Delete Favorite Function
       } else if (e.target.classList.contains('delete')) {
         if (!confirm('Do you really want to delete this favorite?')) return;
         try {

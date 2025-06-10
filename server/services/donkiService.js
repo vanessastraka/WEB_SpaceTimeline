@@ -49,7 +49,6 @@ exports.fetchDonkiData = async (eventTypes, startDate, endDate) => {
                     api_key: apiKey
                 }
             });
-
             allEvents[eventType] = response.data;
         }
 
