@@ -201,12 +201,12 @@ html, body {
 
 .wikiButton {
     display: inline-block;
-    margin-top: 8px;
+    margin-top: 10px;
     padding: 6px 12px;
-    background-color: grey;
-    color: black;
-    border: none;
-    border-radius: 4px;
+    background-color: #222;
+    color: white;
+    border: 1px solid #fff;
+    border-radius: 6px;
     text-decoration: none;
     font-size: 14px;
     cursor: pointer;
@@ -214,24 +214,8 @@ html, body {
 }
 
 .wikiButton:hover {
-    background-color: white;
+    background-color: #444;
     transition: all 0.2s ease-in-out;
-}
-
-/* Favorite-Button (falls verwendet) */
-.favorite-btn {
-    color: white;
-    background-color: grey;
-    border: 2px solid white;
-    padding: 5px;
-    text-align: center;
-    border-radius: 6px;
-    box-sizing: border-box;
-    cursor: pointer;
-}
-.favorite-btn:hover {
-    background-color: cornflowerblue;
-    color: black;
 }
 
 /* Hidden-Klasse */
