@@ -55,8 +55,9 @@ html, body {
     user-select: none;
 }
 
-/* INFO-BOX */
+/* ============= TIMELINE BOX ============= */
 
+/* Box über Timeline - BOX */
 .info-rect {
     fill: rgba(128, 128, 128, 0.8);  /* halbtransparentes Grau */
     stroke: #fff;
@@ -65,7 +66,7 @@ html, body {
     ry: 6px;
 }
 
-/* Info-Text */
+/* Box über Timeline - Eventname */
 .info-text {
     fill: #fff;
     font-size: 0.8rem;
@@ -74,11 +75,14 @@ html, body {
     user-select: none;
 }
 
+/* Box über Timeline - Eventdatum */
 .date-text {
     fill: #dddddd;
     font-size: 14px;
     font-family: sans-serif;
 }
+
+/* ============= INFO PANEL ============= */
 
 #info-panel {
     position: fixed;
@@ -179,7 +183,7 @@ html, body {
     color: #e0e0e0;
   }
 
-  #fav-button {
+  #fav-button, #fav-site {
     margin-top: 10px;
     padding: 6px 12px;
     font-size: 14px;
@@ -189,7 +193,7 @@ html, body {
     border-radius: 6px;
     cursor: pointer;
 }
-#fav-button:hover {
+#fav-button:hover, #fav-site:hover {
     background-color: #444;
 }
 
