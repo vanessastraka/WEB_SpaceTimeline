@@ -22,7 +22,7 @@
             user-select: none;
             border: none;
             width: 100%;
-            text-align: center;
+            text-align: left;
             transition: background 0.15s;
         }
         .faq-category-header.active { background: #293366; color: #fffbc1; }
@@ -46,24 +46,24 @@
             margin-top: 0.1rem;
             background: rgba(255,255,255,0.02);
         }
+
+
         @media (max-width: 600px) {
             .faq-section { padding: 0.6rem; }
             .faq-category-content { padding: 0.9rem 0.5rem 0.9rem 0.7rem; }
         }
     </style>
+
 </head>
 <body>
 <header>
+    <h1 class="header-title">Frequently Asked Questions</h1>
+    <button onclick="location.href='index.html'" class="btn" style="display:block; margin: 1em auto;">Back to Home</button>
     <div class="header-container">
-        <div class="header-top">
-            <h1>Frequently Asked Questions</h1>
-        </div>
         <div class="header-bottom">
             <div class="header-left"></div>
             <div class="header-right">
-                <nav id="hamburger-menu" class="hamburger-menu hidden">
-                    <button onclick="location.href='index.html'" class="btn">Back to Home</button>
-                </nav>
+                <nav id="hamburger-menu" class="hamburger-menu hidden"></nav>
             </div>
         </div>
     </div>

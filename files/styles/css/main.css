@@ -25,7 +25,11 @@
     letter-spacing: 0.02em;
     margin-right: 0.7em;
     white-space: nowrap;
+    text-align: center;
+    margin: 0;
 }
+
+
 
 /* Filter mittig */
 .header-center {
@@ -36,6 +40,7 @@
     gap: 1.1em;
     min-width: 0;
 }
+
 
 .filter-group {
     display: flex;
