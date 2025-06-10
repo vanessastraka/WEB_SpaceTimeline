@@ -246,27 +246,29 @@ function showInfoPanel(item) {
     const eventBox = panel.querySelector('.event-box');
     eventBox.innerHTML = '';
 
-    //Bild laden
+    //Related Image Box - Bild laden 
+
     const relatedImageBox = document.querySelector('.related-image-box');
-    if (relatedImageBox) {
-    relatedImageBox.innerHTML = ''; // Entfernt altes Bild
+    if (relatedImageBox) { //prüft, ob Element existiert
 
-    const h3 = document.createElement('h3');
-    h3.textContent = 'Related Image';
-    relatedImageBox.appendChild(h3);
+    const oldImg = relatedImageBox.querySelector('img'); // altes Bild entfernt, wenn vorhanden
+    if (oldImg) {
+        relatedImageBox.removeChild(oldImg);
+    }
 
+    //Bild Quellen je nach Event
     const imageMap = {
         FLR: '/images/flare.jpeg',
         GST: '/images/storm.jpeg',
         IPS: '/images/shock.png'
     };
-    const imgSrc = imageMap[item.eventType] || '/images/default.jpg';
+    const imgSrc = imageMap[item.eventType] || ''; //sucht im Objekt nach Eintrag, der zu Event passt
 
-    const img = document.createElement('img');
-    img.src = imgSrc;
-    img.alt = item.eventType;
-    img.classList.add('responsive-image');
-    relatedImageBox.appendChild(img);
+    //Bild nach Event einfügen
+    const img = document.createElement('img'); //erstellt neues img Element
+    img.src = imgSrc; //setzt das Bild auf Pfad
+    img.alt = item.eventType; //Attribut für Barrierefreiheit
+    relatedImageBox.appendChild(img); //Bild wird in Box eingefügt
     }
 
     // Tabelle programmatisch anlegen
