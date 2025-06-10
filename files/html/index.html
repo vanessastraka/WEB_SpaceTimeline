@@ -107,7 +107,7 @@
 
 <!-- SCRIPTS -->
 <script>
-    // 1) JWT→Username
+    // Überprüfung des Usernamens aus JWT
     function getUsernameFromToken() {
         const t = localStorage.getItem('jwt');
         if (!t) return null;
@@ -118,16 +118,18 @@
         }
     }
 
+    // Überprüfung der zugewiesenen Rolle aus JWT
     function getUserRoleFromToken() {
         const t = localStorage.getItem('jwt');
         if (!t) return null;
         try {
             return JSON.parse(atob(t.split('.')[1])).role || 'user';
         } catch {
-            return 'user';
+            return 'user'; //standardgemäß user
         }
     }
 
+    //Überprüfung ob User = Admin -> if true -> Admin Dashboard
     document.addEventListener('DOMContentLoaded', () => {
         const dashboardBtn = document.getElementById('dashboard-btn');
         if (getUserRoleFromToken() === "admin") {
@@ -135,6 +137,14 @@
             dashboardBtn.onclick = () => window.location.href = "/admin.html";
         }
     })
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // M9.1: Login und Token-Erstellung (Backend)
+    // - User gibt Daten ein
+    // - Daten werden Authentifiziert bzw. Überprüft und ans Backend geschickt
+    // - Bei erfolgreicher Authentifizierung erstellt Backend ein JWT
+    // --> WEITER BEI: routes/auth.js
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // 2) Login-Funktion
     async function doLogin(u, p) {
@@ -161,14 +171,17 @@
             outBtn.classList.remove('hidden');
         }
 
+        //Event Listener für den Button "Login" - schickt dann die Daten ans Backend und macht JWT damit
         form.addEventListener('submit', async e => {
             e.preventDefault();
             errSpan.classList.add('hidden');
             const u = document.getElementById('login-username').value;
             const p = document.getElementById('login-password').value;
+
+            //Login-Daten ans backend hier
             const d = await doLogin(u, p);
             if (d.token) {
-                localStorage.setItem('jwt', d.token);
+                localStorage.setItem('jwt', d.token); //JWT wird im browser gespeichert
                 const role = getUserRoleFromToken();
                 if (role === "admin") {
                     window.location.href = "/admin.html";

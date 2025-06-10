@@ -1,11 +1,23 @@
 // app.js – passend zu deinen HTML-IDs!
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  M9: SESSION MANAGEMENT
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 // IDs aus deiner HTML
 const loginForm = document.getElementById('login-form');
 const logoutBtn = document.getElementById('logout-btn');
 const userSpan  = document.getElementById('user-info');
 const msg       = document.getElementById('login-error');
 const toFavSite = document.getElementById('to-fav-site');
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M9.3: Token-Nutzung nach Login
+// Frontend speichert JWT in localStorage -> { localStorage.setItem('jwt', t); }
+// Bei weiteren Requests wird Token in Header mitgeschickt & durch backend validiert.
+// --> function checkSession() z103
+//     Prüft ob Token vorhanden ist und gültig ist
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // === Hilfsfunktionen für JWT und API ===
 function saveToken(t)   { localStorage.setItem('jwt', t); }
@@ -58,7 +70,7 @@ function showLogin() {
 // 2) Session-Management über JWT
 //      nach Login gibt BE JWT zurück;
 //      FE speichert token in lokalStorage;
-// 3) bei weiteren requests  wird Token als Header mitgeschickt -> BE prüft JWT
+// 3) bei weiteren requests  wird Token als Header mitgeschickt -> BE prüft JWT -> middleware/auth.js
 // 4) Logout -> JWT aus Speicher löschen
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -77,13 +89,13 @@ if (loginForm) {
             saveToken(res.token);
             showApp(u);
         } else if (msg) {
-            msg.textContent = res.error || 'Error while logging in.';
+            msg.textContent = res.error || 'Fehler beim Login';
             msg.classList.remove('hidden');
         }
     };
 }
 
-// === Logout ===
+// === Logout --> löscht auch den Token der Session aus dem LocalStorage des Browsers ===
 if (logoutBtn) {
     logoutBtn.onclick = () => {
         clearToken();

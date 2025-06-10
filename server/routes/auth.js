@@ -86,15 +86,32 @@ router.post('/register', async (req, res) => {
  *         description: Internal server error
  */
 
-// Login
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M9.2: Validierung und Token-Erstellung
+// Benutzer werden in DB gesucht, wenn nicht gefunden, dann wird error ausgeworfen ->
+// User wird gefragt sich zu registerien.
+// - Wenn User Gefunden:
+// - Erstellung eines JWT (jsonwebtokens) mit id, username, rolle, secret, expiration
+// - das wird dann schlussendlich zurück an client geschickt
+// --> scripts/app.js
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// Backend: Login-Route
 router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
+
+        // Benutzer nach Benutzernamen suchen
         const user = await User.findOne({ username });
         if (!user || !(await user.comparePassword(password))) {
-            return res.status(401).json({ error: 'Ungültige Anmeldedaten' });
+            // Ungültige Anmeldedaten
+            return res.status(401).json({ error: 'Invalid Data' });
         }
+
+        // JWT erstellen (Benutzerinformationen werden codiert)
         const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Token zurück an den Client senden
         res.json({ token });
     } catch (err) {
         res.status(500).json({ error: err.message });
