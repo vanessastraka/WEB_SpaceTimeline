@@ -6,6 +6,12 @@ const router   = express.Router();
 
 router.use(requireAuth);
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+//      M6: HTTP endpoints of the BE manage resources
+//      using HTTP methods GET, POST, PUT and DELETE,
+//      each method at least on one HTTP endpoint.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
 // Favoriten anlegen
 router.post('/', async (req, res) => {
     const userId = req.userId;
@@ -37,6 +43,10 @@ router.post('/', async (req, res) => {
  *               items:
  *                 
  */
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+//   M5: HTTP endpoints of BE component must return data as JSON (or as XML)
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 // Alle Favoriten des Users ausliefern
 router.get('/', async (req, res) => {

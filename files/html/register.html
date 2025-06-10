@@ -3,55 +3,51 @@
 <html lang="de">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Register</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles/css/style.css">
-  <link rel="icon" type="image/apng" href="../images/favicon.png">
-  <meta name="author" content="KLKM">
-  <meta name="description" content="Register for SolarTimeline">
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/css/style.css">
+    <link rel="icon" type="image/apng" href="../images/favicon.png">
+    <meta name="author" content="KLKM">
+    <meta name="description" content="Register for SolarTimeline">
 </head>
 
 <body>
 
-  <div class="content-box">
-    <h1>Registrieren</h1>
+<div class="content-box">
+    <h1>Create User Account @SolarTimeline</h1>
     <form id="reg-form">
-      <div>
-        <label for="username">Benutzername</label>
-        <input id="username" name="username" placeholder="User" required>
-      </div>
-
-      <div>
-        <label for="password">Passwort</label>
-        <input id="password" name="password" type="password" placeholder="Passwort" required>
-      </div>
-
-      <button type="submit">Registrieren</button>
+        <div>
+            <label for="username">Choose username</label>
+            <input id="username" name="username" placeholder="user" required>
+        </div>
+        <div>
+            <label for="password">Choose password</label>
+            <input id="password" name="password" type="password" placeholder="password" required>
+        </div>
+        <button type="submit">Register</button>
     </form>
     <button onclick="location.href='index.html'" class="btn">Back to Home</button>
-  </div>
+</div>
 
 <p id="error" style="color:red" aria-live="polite"></p>
 
 <script>
-  document.getElementById('reg-form').addEventListener('submit', async e => {
-    e.preventDefault();
-    const {username,password} = Object.fromEntries(new FormData(e.target));
-    const res = await fetch('/api/register', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({username,password})
+    document.getElementById('reg-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const {username, password} = Object.fromEntries(new FormData(e.target));
+        const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username, password})
+        });
+        const data = await res.json();
+        if (res.ok) {
+            location.href = '/index.html';
+        } else {
+            document.getElementById('error').textContent = data.error;
+        }
     });
-    const data = await res.json();
-    if (res.ok) {
-      location.href = '/index.html';
-    } else {
-      document.getElementById('error').textContent = data.error;
-    }
-  });
 </script>
-
 </body>
-
 </html>

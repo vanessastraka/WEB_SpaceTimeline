@@ -1,7 +1,7 @@
-const express = require('express');
-const jwt     = require('jsonwebtoken');
-const User    = require('../models/User');
-const router  = express.Router();
+const express= require('express');
+const jwt= require('jsonwebtoken');
+const User= require('../models/User');
+const router= express.Router();
 
 const { requireAuth } = require('../middleware/auth');
 
@@ -100,7 +100,6 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
 
 router.get('/me', requireAuth, async (req, res) => {
     try {

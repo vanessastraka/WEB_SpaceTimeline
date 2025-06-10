@@ -52,6 +52,10 @@
     window.location.href = "/index.html";
   }
 
+
+  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+  <!--   M3: The communication between FE and BE components must be implemented using HTTP(S).   -->
+  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
   async function loadCacheInfo() {
     const res = await fetch('/api/donki/admin/cacheinfo', {
       headers: { Authorization: 'Bearer ' + localStorage.getItem('jwt') }
@@ -114,6 +118,10 @@
     </tr>`;
     });
   }
+
+  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+  <!--   S2: The system should offer a second individual FE component that communicates with at least three HTTP endpoints of the BE component.   -->
+  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
   async function deleteUser(id) {
     if (!confirm('User wirklich löschen?')) return;

@@ -36,21 +36,18 @@
 
   <script>
     (async function(){
-      console.log("TEST: Session-Check startet");
       const token = getToken();
-      console.log("TOKEN im LocalStorage:", token);
       if (!token) {
-        document.getElementById('error').textContent = "Kein Token gefunden!";
+        document.getElementById('error').textContent = "No Token Found!";
         return;
       }
       try {
         const res = await fetch('/api/me', {
           headers: { Authorization: 'Bearer ' + token }
         });
-        console.log("API/ME Response:", res);
         const data = await res.json();
         if (!res.ok) {
-          document.getElementById('error').textContent = "Session ungültig: " + (data.error || res.status);
+          document.getElementById('error').textContent = "Session invalid: " + (data.error || res.status);
           return;
         }
         document.getElementById('error').textContent = "Angemeldet als: " + data.username;
@@ -63,13 +60,27 @@
 
 
   <script>
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  M4: FE/BE (AJAX) - Favorites via AJAX
+//  Endpoint: /api/favorites
+//  fetchFavorites(): - Retrieves the user's saved favorites asynchronously.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M7: The frontend (FE) component consumes resources using
+// **GET**    -- favorites - fetchFavorites() // TODO are we sure?
+// **POST**   -- favorites - add-fav-form
+// **PUT**    -- favorites - save
+// **DELETE** -- favorites - delete
+// HTTP methods from backend (BE) endpoints
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     const apiUrl = '/api/favorites';
     const token = localStorage.getItem('jwt');
     const errorElem = document.getElementById('error');
 
     if (!token) {
-      errorElem.textContent = 'Du bist nicht eingeloggt. Bitte zuerst einloggen.';
-      // Option: location.href = '/login.html';
+      errorElem.textContent = 'You are not logged in, please login first.';
     }
 
     async function fetchFavorites() {
@@ -77,7 +88,7 @@
         const res = await fetch(apiUrl, {
           headers: { Authorization: 'Bearer ' + token }
         });
-        if (!res.ok) throw new Error('Fehler beim Laden der Favoriten');
+        if (!res.ok) throw new Error('Error while loading favorites');
         const favs = await res.json();
         renderFavorites(favs);
       } catch (err) {
@@ -89,7 +100,7 @@
       const list = document.getElementById('favorites-list');
       list.innerHTML = '';
       if (favorites.length === 0) {
-        list.innerHTML = '<li>Keine Favoriten vorhanden.</li>';
+        list.innerHTML = '<li>No Favorites available.</li>';
         return;
       }
       favorites.forEach(fav => {
@@ -124,13 +135,13 @@
             },
             body: JSON.stringify({ note })
           });
-          if (!res.ok) throw new Error('Fehler beim Speichern');
-          errorElem.textContent = 'Favorit gespeichert.';
+          if (!res.ok) throw new Error('Error while saving');
+          errorElem.textContent = 'Favorite saved.';
         } catch (err) {
           errorElem.textContent = err.message;
         }
       } else if (e.target.classList.contains('delete')) {
-        if (!confirm('Favorit wirklich löschen?')) return;
+        if (!confirm('Do you really want to delete this favorite?')) return;
         try {
           const res = await fetch(`${apiUrl}/${id}`, {
             method: 'DELETE',
@@ -138,9 +149,9 @@
           });
           if (res.status === 204) {
             li.remove();
-            errorElem.textContent = 'Favorit gelöscht.';
+            errorElem.textContent = 'Favorit deleted.';
           } else {
-            throw new Error('Fehler beim Löschen');
+            throw new Error('error while deleting');
           }
         } catch (err) {
           errorElem.textContent = err.message;
@@ -148,7 +159,13 @@
       }
     });
 
-    // Neues Favorit hinzufügen
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M4: FE/BE (AJAX) - Favorites via AJAX
+// add-fav-form: - Asynchronously sends form data to the backend to add a new favorite.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // Neuen Favorit hinzufügen
     document.getElementById('add-fav-form').addEventListener('submit', async e => {
       e.preventDefault();
       if (!token) return;
@@ -167,10 +184,10 @@
           },
           body: JSON.stringify({ eventId, title, time, location, note })
         });
-        if (!res.ok) throw new Error('Fehler beim Hinzufügen');
+        if (!res.ok) throw new Error('Error while adding');
         const newFav = await res.json();
         e.target.reset();
-        errorElem.textContent = 'Favorit hinzugefügt.';
+        errorElem.textContent = 'favorite was added';
         fetchFavorites();
       } catch (err) {
         errorElem.textContent = err.message;

@@ -1,3 +1,7 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--   M2: The frontend (FE) of the system must be an individual component implemented using HTML5, CSS and JS.   -->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +13,9 @@
     <meta name="author" content="KLKM">
     <meta name="description" content="Project for ...">
     <title>SolarTimeline</title>
-    <style>.hidden { display: none !important; }</style>
+    <style>.hidden {
+        display: none !important;
+    }</style>
 </head>
 <body>
 <!-- HEADER WITH LOGIN/REGISTER -->
@@ -54,7 +60,7 @@
             <button id="logout-btn" class="hidden">Logout</button>
             <button id="dashboard-btn" class="hidden">Admin-Dashboard</button>
             <button id="hamburger-btn" class="hamburger-btn" aria-label="Menü">☰</button>
-            
+
             <nav id="hamburger-menu" class="hamburger-menu hidden">
                 <a href="https://api.nasa.gov/" target="_blank">NASA API Info</a>
                 <a href="faq.html">FAQ</a>
@@ -65,7 +71,6 @@
         </div>
     </div>
 </header>
-
 
 
 <!-- TIMELINE -->
@@ -88,7 +93,8 @@
         <div class="info-box">
             <h3>Event Information</h3>
             <button id="fav-button" class="hidden">To Favorites</button>
-            <button id="fav-site" class="hidden" onclick="window.location.href='http://localhost:3000/fav'">Fav Site</button>
+            <button id="fav-site" class="hidden" onclick="window.location.href='http://localhost:3000/fav'">Fav Site
+            </button>
             <div class="event-box"></div>
         </div>
         <div class="info-box related-image-box">
@@ -101,92 +107,98 @@
 
 <!-- SCRIPTS -->
 <script>
-        // 1) JWT→Username
+    // 1) JWT→Username
     function getUsernameFromToken() {
         const t = localStorage.getItem('jwt');
         if (!t) return null;
-        try { return JSON.parse(atob(t.split('.')[1])).username; }
-        catch { return null; }
+        try {
+            return JSON.parse(atob(t.split('.')[1])).username;
+        } catch {
+            return null;
+        }
     }
 
     function getUserRoleFromToken() {
         const t = localStorage.getItem('jwt');
         if (!t) return null;
-        try { return JSON.parse(atob(t.split('.')[1])).role || 'user'; }
-        catch { return 'user'; }
+        try {
+            return JSON.parse(atob(t.split('.')[1])).role || 'user';
+        } catch {
+            return 'user';
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         const dashboardBtn = document.getElementById('dashboard-btn');
-        if(getUserRoleFromToken() === "admin") {
+        if (getUserRoleFromToken() === "admin") {
             dashboardBtn.classList.remove('hidden');
             dashboardBtn.onclick = () => window.location.href = "/admin.html";
         }
     })
 
-        // 2) Login-Funktion
-  async function doLogin(u,p){
-        const res = await fetch('/api/login',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({username:u,password:p})
-    });
+    // 2) Login-Funktion
+    async function doLogin(u, p) {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username: u, password: p})
+        });
         return res.json();
     }
 
-        document.addEventListener('DOMContentLoaded',()=>{
-        const form    = document.getElementById('login-form');
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('login-form');
         const errSpan = document.getElementById('login-error');
-        const userSp  = document.getElementById('user-info');
-        const outBtn  = document.getElementById('logout-btn');
+        const userSp = document.getElementById('user-info');
+        const outBtn = document.getElementById('logout-btn');
 
         // bereits eingeloggt?
         const name = getUsernameFromToken();
-        if(name){
-        form.classList.add('hidden');
-        userSp.textContent = 'Angemeldet: '+name;
-        userSp.classList.remove('hidden');
-        outBtn.classList.remove('hidden');
-    }
+        if (name) {
+            form.classList.add('hidden');
+            userSp.textContent = 'Angemeldet: ' + name;
+            userSp.classList.remove('hidden');
+            outBtn.classList.remove('hidden');
+        }
 
-  form.addEventListener('submit', async e => {
-      e.preventDefault();
-      errSpan.classList.add('hidden');
-      const u = document.getElementById('login-username').value;
-      const p = document.getElementById('login-password').value;
-      const d = await doLogin(u, p);
-      if (d.token) {
-          localStorage.setItem('jwt', d.token);
-          const role = getUserRoleFromToken();
-          if (role === "admin") {
-              window.location.href = "/admin.html";
-          } else {
-              form.classList.add('hidden');
-              userSp.textContent = 'Logged in: ' + u;
-              userSp.classList.remove('hidden');
-              outBtn.classList.remove('hidden');
-          }
-      } else {
-          const msg = d.error || 'Login error';
-          errSpan.textContent = msg;
-          errSpan.classList.remove('hidden');
-          if (confirm(msg + '\nNo user found - Register new user?')) {
-              location.href = 'register.html';
-          }
-      }
-  });
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            errSpan.classList.add('hidden');
+            const u = document.getElementById('login-username').value;
+            const p = document.getElementById('login-password').value;
+            const d = await doLogin(u, p);
+            if (d.token) {
+                localStorage.setItem('jwt', d.token);
+                const role = getUserRoleFromToken();
+                if (role === "admin") {
+                    window.location.href = "/admin.html";
+                } else {
+                    form.classList.add('hidden');
+                    userSp.textContent = 'Logged in: ' + u;
+                    userSp.classList.remove('hidden');
+                    outBtn.classList.remove('hidden');
+                }
+            } else {
+                const msg = d.error || 'Login error';
+                errSpan.textContent = msg;
+                errSpan.classList.remove('hidden');
+                if (confirm(msg + '\nNo user found - Register new user?')) {
+                    location.href = 'register.html';
+                }
+            }
+        });
 
-        outBtn.addEventListener('click',()=>{
-        localStorage.removeItem('jwt');
-        location.reload();
-    });
+        outBtn.addEventListener('click', () => {
+            localStorage.removeItem('jwt');
+            location.reload();
+        });
 
         // Hamburger
         document.getElementById('hamburger-btn')
-        .addEventListener('click',()=>{
-        document.getElementById('hamburger-menu')
-        .classList.toggle('hidden');
-    });
+            .addEventListener('click', () => {
+                document.getElementById('hamburger-menu')
+                    .classList.toggle('hidden');
+            });
     });
 </script>
 <script src="../scripts/timeline.js"></script>

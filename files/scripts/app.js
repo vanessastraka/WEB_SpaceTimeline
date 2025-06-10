@@ -47,7 +47,22 @@ function showLogin() {
     if (toFavSite) toFavSite.classList.add('hidden');
 }
 
-// === Login-Formular ===
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M4: FE/BE (AJAX) - Sends user login data asynchronously using `fetch()`. Next Step: z95
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M9: Session management (Login, sessionID, JWT, ...).
+// 1) Login -> Formular (Benutzer, Passwort)
+// 2) Session-Management über JWT
+//      nach Login gibt BE JWT zurück;
+//      FE speichert token in lokalStorage;
+// 3) bei weiteren requests  wird Token als Header mitgeschickt -> BE prüft JWT
+// 4) Logout -> JWT aus Speicher löschen
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // === Login-Formular ===
 if (loginForm) {
     loginForm.onsubmit = async e => {
         e.preventDefault();
@@ -76,6 +91,9 @@ if (logoutBtn) {
     };
 }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//                 M4: FE/BE (AJAX) - Checks if the user has a valid session token asynchronously.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // === Session-Check ===
 async function checkSession() {
     const token = getToken();

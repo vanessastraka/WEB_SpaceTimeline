@@ -1,3 +1,6 @@
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//                 M1: The backend (BE) of the system must be an individual component.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 require('dotenv').config();
 require('./db');
 
@@ -32,6 +35,10 @@ app.use('/api/donki', donkiRoutes);
 app.use('/api/wikimedia', wikimediaRoutes);
 app.use('/api/apod', apodRoutes);
 
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//     M6: The HTTP endpoints of the BE component must manage resources using HTTP methods **GET**
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //make index.html reachable
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "files", "html", "index.html"));

@@ -6,6 +6,10 @@ const router = express.Router();
 const donkiController = require('../controllers/donkiController')
 const { requireAdmin } = require('../middleware/auth');
 
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//     M6: The HTTP endpoints of the BE component must manage resources using HTTP methods **GET/POST**
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Am Ende (NUR für Admin/Demo!):
 router.get('/admin/cacheinfo', requireAdmin, donkiController.getDonkiCacheInfo);
 router.post('/admin/clearcache', requireAdmin, donkiController.clearDonkiCache);

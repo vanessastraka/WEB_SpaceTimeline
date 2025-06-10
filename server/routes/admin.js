@@ -13,7 +13,11 @@ router.get('/users', requireAdmin, async (req, res) => {
     }
 });
 
-// User löschen (optional)
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//     M6: The HTTP endpoints of the BE component must manage resources using HTTP methods **DELETE**
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// User löschen
 router.delete('/users/:id', requireAdmin, async (req, res) => {
     try {
         await User.findByIdAndDelete(req.params.id);
@@ -23,7 +27,10 @@ router.delete('/users/:id', requireAdmin, async (req, res) => {
     }
 });
 
-// Rolle ändern (optional)
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//     M6: The HTTP endpoints of the BE component must manage resources using HTTP methods **PUT**
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Rolle ändern
 router.put('/users/:id', requireAdmin, async (req, res) => {
     try {
         const { role } = req.body;
