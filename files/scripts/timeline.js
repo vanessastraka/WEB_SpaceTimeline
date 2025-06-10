@@ -237,12 +237,38 @@ function showInfoPanel(item) {
     const ev    = item.raw;
     const panel = document.getElementById('info-panel');
     const btn   = document.getElementById('toggle-button');
+
     if (!panel.classList.contains('expanded')) {
         panel.classList.add('expanded');
         btn.textContent = '▼ Close';
     }
+
     const eventBox = panel.querySelector('.event-box');
     eventBox.innerHTML = '';
+
+    //Bild laden
+    const relatedImageBox = document.querySelector('.related-image-box');
+    if (relatedImageBox) {
+    relatedImageBox.innerHTML = ''; // Entfernt altes Bild
+
+    const h3 = document.createElement('h3');
+    h3.textContent = 'Related Image';
+    relatedImageBox.appendChild(h3);
+
+    const imageMap = {
+        FLR: '/images/flare.jpeg',
+        GST: '/images/storm.jpeg',
+        IPS: '/images/shock.png'
+    };
+    const imgSrc = imageMap[item.eventType] || '/images/default.jpg';
+
+    const img = document.createElement('img');
+    img.src = imgSrc;
+    img.alt = item.eventType;
+    img.classList.add('responsive-image');
+    relatedImageBox.appendChild(img);
+    }
+
     // Tabelle programmatisch anlegen
     const table = document.createElement('table');
     table.classList.add('event-table');

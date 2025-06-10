@@ -153,12 +153,27 @@ html, body {
     text-align: center;
   }
 
-  .related-image-box img {
-    width: 100%;
-    height: auto;
+  .related-image-box {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* oder feste Höhe wie 300px */
+}
+
+.related-image-box h3 {
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+}
+
+.related-image-box img {
     display: block;
+    margin: 10px auto 0 auto;
+    width: 100%;
+    max-height: 200px; /* Begrenzung einführen */
     object-fit: contain;
-  }
+    border-radius: 4px;
+}
+
 
   .event-table td {
     color: #e0e0e0;
@@ -251,17 +266,14 @@ html, body {
     overflow-x: hidden;
   }
 
-  .info-box {
+  .info-box h3 {
     box-sizing: border-box;
     width: 100%;
     flex: 1 1 auto;
     margin: 0 auto;
-  }
+}
 
-  .related-image-box img {
-    max-height: 135px;
-    object-fit: cover;
-  }
+
 #timeline-container {
   margin-top: 10px;
   margin-bottom: 80px;
