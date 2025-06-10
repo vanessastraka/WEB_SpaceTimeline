@@ -70,7 +70,7 @@
     }
 
     if(data.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5"><em>Kein Cache aktiv</em></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5"><em>No Cache active</em></td></tr>';
     } else {
       data.forEach(row => {
         tbody.innerHTML += `<tr>
@@ -83,13 +83,26 @@
       });
     }
   }
+
   document.getElementById('clear-cache-btn').onclick = async () => {
-    const res = await fetch('/api/donki/admin/clearcache', { method: 'POST' });
-    const data = await res.json();
-    document.getElementById('admin-msg').textContent = data.message;
-    await loadCacheInfo();
-    setTimeout(() => document.getElementById('admin-msg').textContent = '', 3000);
+      try {
+          const res = await fetch('/api/donki/admin/clearcache', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + localStorage.getItem('jwt') }
+          });
+          if (!res.ok) {
+              throw new Error("Failed to clear cache: " + res.statusText);
+          }
+          const data = await res.json();
+          document.getElementById('admin-msg').textContent = data.message;
+          await loadCacheInfo();
+          setTimeout(() => document.getElementById('admin-msg').textContent = '', 3000);
+      } catch (error) {
+          console.error("Error occurred:", error);
+          document.getElementById('admin-msg').textContent = error.message;
+      }
   };
+
 
   // Initial laden & regelmäßig aktualisieren
   loadCacheInfo();
@@ -124,7 +137,7 @@
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
   async function deleteUser(id) {
-    if (!confirm('Really delete user?')) return;
+    if (!confirm('Delete User permanently?')) return;
     await fetch(`/api/admin/users/${id}`, {
       method: 'DELETE',
       headers: { Authorization: 'Bearer ' + localStorage.getItem('jwt') }
