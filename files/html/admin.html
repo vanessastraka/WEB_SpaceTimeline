@@ -133,6 +133,11 @@
     });
   }
 
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //   C3: The BE component of the system could provide a PATCH HTTP endpoint, which is consumed by the FE component.
+  //    updateUserRow to update the userlist to see changes
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   function updateUserRow(btn, id) {
       const row = btn.closest('tr');
       const input = row.querySelector('.edit-username');
@@ -158,6 +163,10 @@
     loadUsers();
   }
 
+
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //   C3: The BE component of the system could provide a PATCH HTTP endpoint, which is consumed by the FE component.
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   async function updateUser(id, updates) {
       try {
           const res = await fetch(`/api/admin/users/${id}`, {

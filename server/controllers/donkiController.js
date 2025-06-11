@@ -98,6 +98,11 @@ exports.getDonkiData = async (req, res) => {
             responseData = cached.data;
         }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//     C2: The HTTP endpoints of the BE component could return the data as JSON and XML.
+//         As well as in apodController/wikimediaController
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         if (acceptsXML) {
             const xmlData = js2xmlparser.parse("donki", responseData);
             res.set('Content-Type', 'application/xml');
