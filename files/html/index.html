@@ -123,6 +123,16 @@
         }
     }
 
+    function getUsernameFromToken() {
+        const t = localStorage.getItem('jwt');
+        if (!t) return null;
+        try {
+            return JSON.parse(atob(t.split('.')[1])).username;
+        } catch {
+            return null;
+        }
+    }
+
     if (getUserRoleFromToken() === "admin") {
             dashboardBtn.classList.remove('hidden');
             dashboardBtn.onclick = () => window.location.href = "/admin.html";
@@ -199,6 +209,8 @@
                 userSp.classList.remove('hidden');
                 outBtn.classList.remove('hidden');
             }
+
+
 
     });
 </script>
