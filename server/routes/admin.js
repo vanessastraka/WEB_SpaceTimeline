@@ -41,4 +41,20 @@ router.put('/users/:id', requireAdmin, async (req, res) => {
     }
 });
 
+// User teilweise aktualisieren (PATCH)
+router.patch('/users/:id', requireAdmin, async (req, res) => {
+    try {
+        const updates = req.body; // Das JSON mit den Feldern, die aktualisiert werden sollen
+        const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true, fields: 'username role' });
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        res.json(user); // Rückgabe des aktualisierten Benutzers
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+
 module.exports = router;

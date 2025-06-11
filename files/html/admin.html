@@ -31,6 +31,7 @@
   <tr>
     <th>Username</th>
     <th>Role</th>
+    <th>Edit Username</th>
     <th>Action</th>
   </tr>
   </thead>
@@ -117,16 +118,32 @@
     }
     data.forEach(user => {
       tbody.innerHTML += `<tr>
-      <td>${user.username}</td>
-      <td>${user.role}</td>
-      <td>
-        <button onclick="deleteUser('${user._id}')">Delete</button>
-        <button onclick="makeAdmin('${user._id}')">Set as Admin</button>
-        <button onclick="makeUser('${user._id}')">Set as User</button>
-      </td>
-    </tr>`;
+    <td>${user.username}</td>
+    <td>${user.role}</td>
+    <td>
+      <input type="text" placeholder="New Username" data-id="${user._id}" class="edit-username">
+    </td>
+    <td>
+      <button onclick="deleteUser('${user._id}')">Delete</button>
+      <button onclick="makeAdmin('${user._id}')">Set as Admin</button>
+      <button onclick="makeUser('${user._id}')">Set as User</button>
+      <button onclick="updateUserRow(this, '${user._id}')">Update Username</button>
+    </td>
+  </tr>`;
     });
   }
+
+  function updateUserRow(btn, id) {
+      const row = btn.closest('tr');
+      const input = row.querySelector('.edit-username');
+      const newUsername = input.value.trim();
+      if (newUsername) {
+          updateUser(id, { username: newUsername });
+      } else {
+          document.getElementById('admin-msg').textContent = 'Please enter a new username!';
+      }
+  }
+
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //   S2: The system should offer a second individual FE component that communicates with at least three HTTP endpoints of the BE component.
@@ -140,6 +157,28 @@
     });
     loadUsers();
   }
+
+  async function updateUser(id, updates) {
+      try {
+          const res = await fetch(`/api/admin/users/${id}`, {
+              method: 'PATCH',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+              },
+              body: JSON.stringify(updates)
+          });
+          const data = await res.json();
+          if (!res.ok) {
+              throw new Error(data.error || 'Error while updating user');
+          }
+          document.getElementById('admin-msg').textContent = 'User updated successfully!';
+          await loadUsers(); // Tabelle aktualisieren
+      } catch (err) {
+          document.getElementById('admin-msg').textContent = `Error: ${err.message}`;
+      }
+  }
+
 
   async function makeAdmin(id) {
     await fetch(`/api/admin/users/${id}`, {
