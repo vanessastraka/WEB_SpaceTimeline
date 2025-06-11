@@ -71,8 +71,6 @@
         </div>
     </div>
 </header>
-
-
 <!-- TIMELINE -->
 <main>
     <div id="timeline-section">
@@ -112,7 +110,9 @@
         const errSpan = document.getElementById('login-error');
         const userSp = document.getElementById('user-info');
         const outBtn = document.getElementById('logout-btn');
+        const dashboardBtn = document.getElementById('dashboard-btn');
 
+        /*
     // Überprüfung des Usernamens aus JWT
     function getUsernameFromToken() {
         const t = localStorage.getItem('jwt');
@@ -123,6 +123,7 @@
             return null;
         }
     }
+         */
 
     // Überprüfung der zugewiesenen Rolle aus JWT
     function getUserRoleFromToken() {
@@ -135,14 +136,10 @@
         }
     }
 
-    //Überprüfung ob User = Admin -> if true -> Admin Dashboard
-    document.addEventListener('DOMContentLoaded', () => {
-        const dashboardBtn = document.getElementById('dashboard-btn');
-        if (getUserRoleFromToken() === "admin") {
+    if (getUserRoleFromToken() === "admin") {
             dashboardBtn.classList.remove('hidden');
             dashboardBtn.onclick = () => window.location.href = "/admin.html";
         }
-    })
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
