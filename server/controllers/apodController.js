@@ -1,5 +1,8 @@
 const apodService = require('../services/apodService');
 
+// for XML
+const js2xmlparser = require("js2xmlparser");
+
 const apodCache = {};
 const CACHE_TIME = 10 * 60 * 1000; // 10 min cache time
 
@@ -19,11 +22,20 @@ exports.getApodData = async (req, res) => {
         return res.status(400).json({ message: "Invalid date format. Use YYYY-MM-DD." });
     }
 
+    // for XML
+    const acceptsXML = req.headers.accept === 'application/xml';
+
     // check cache
     const cached = apodCache[usedDate];
     if (cached && (Date.now() - cached.timestamp < CACHE_TIME)) {
-        return res.json(cached.data);
+        if (acceptsXML) {
+            const xmlData = js2xmlparser.parse("apod", cached.data);
+            res.set('Content-Type', 'application/xml');
+            return res.send(xmlData);
+        } else {
+            return res.json(cached.data);
     }
+}
 
     try {
         const apodData = await apodService.fetchApodData(usedDate);
@@ -34,7 +46,13 @@ exports.getApodData = async (req, res) => {
             timestamp: Date.now()
         };
 
-        return res.json(apodData);
+        if (acceptsXML) {
+            const xmlData = js2xmlparser.parse("apod", apodData);
+            res.set('Content-Type', 'application/xml');
+            return res.send(xmlData);
+        } else {
+            return res.json(apodData);
+        }
     } catch (error) {
         return res.status(500).json({ message: "Error fetching APOD data." });
     }

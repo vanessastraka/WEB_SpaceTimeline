@@ -1,7 +1,10 @@
 const wikimediaService = require('../services/wikimediaService');
 
 const wikiCache = {};
-const CACHE_TIME = 5 * 60 * 1000; // 5 Minuten
+const CACHE_TIME = 5 * 60 * 1000; // 5 min
+
+// for XML
+const js2xmlparser = require("js2xmlparser");
 
 exports.getWikimediaData = async (req, res) => {
     const { title } = req.params;
@@ -10,8 +13,17 @@ exports.getWikimediaData = async (req, res) => {
     const cacheKey = title.toLowerCase();
     const cached = wikiCache[cacheKey];
 
+    // for XML
+    const acceptsXML = req.headers.accept === 'application/xml';
+
     if (cached && (Date.now() - cached.timestamp < CACHE_TIME)) {
-        return res.json(cached.data);
+        if (acceptsXML) {
+            const xmlData = js2xmlparser.parse("wikimedia", cached.data);
+            res.set('Content-Type', 'application/xml');
+            return res.send(xmlData);
+        } else {
+            return res.json(cached.data);
+        }
     }
 
     try {
@@ -32,7 +44,14 @@ exports.getWikimediaData = async (req, res) => {
             timestamp: Date.now()
         };
 
-        res.json(result);
+        if (acceptsXML) {
+            const xmlData = js2xmlparser.parse("wikimedia", result);
+            res.set('Content-Type', 'application/xml');
+            return res.send(xmlData);
+        } else {
+            return res.json(result);
+        }
+        
     } catch (error) {
         console.error("Error during fetch for Wikipedia Article:", error);
         res.status(500).json({ message: "Error during fetch for Wikipedia Article." });

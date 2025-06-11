@@ -3,6 +3,8 @@
 // "importing" service that calls the API
 const donkiService = require('../services/donkiService');
 
+// for XML
+const js2xmlparser = require("js2xmlparser");
 
 const donkiCache = {};
 const CACHE_TIME = 5 * 60 * 1000; // 5 Minuten
@@ -84,12 +86,24 @@ exports.getDonkiData = async (req, res) => {
     // Key für Cache bauen (abhängig von Events, Start- und End-Datum)
     const cacheKey = JSON.stringify({ eventTypes, startDate, endDate });
     const cached = donkiCache[cacheKey];
+
+    // check cache and if XML or JSON
     if (cached && (Date.now() - cached.timestamp < CACHE_TIME)) {
-        // Sofort aus dem Cache zurückgeben!
+        const acceptsXML = req.headers.accept === 'application/xml';
+
+        let responseData;
         if (eventData) {
-            return res.json({ [eventData]: cached.data[eventData] });
+            responseData = { [eventData]: cached.data[eventData] };
         } else {
-            return res.json(cached.data);
+            responseData = cached.data;
+        }
+
+        if (acceptsXML) {
+            const xmlData = js2xmlparser.parse("donki", responseData);
+            res.set('Content-Type', 'application/xml');
+            return res.send(xmlData);
+        } else {
+            return res.json(responseData);
         }
     }
 
@@ -109,13 +123,24 @@ exports.getDonkiData = async (req, res) => {
             timestamp: Date.now()
         };
 
-        // data gets returned in json format
+
+        // Check if the client wants XML
+        const acceptsXML = req.headers.accept === 'application/xml';
+
+        let responseData;
+
         if (eventData) {
-            // if one specific event, saved with the key for the filter function
-            res.json({ [eventData]: filteredData[eventData] });
+            responseData = { [eventData]: filteredData[eventData] };
         } else {
-            // if all
-            res.json(filteredData);
+            responseData = filteredData;
+        }
+
+        if (acceptsXML) {
+            const xmlData = js2xmlparser.parse("donki", responseData);
+            res.set('Content-Type', 'application/xml');
+            res.send(xmlData);
+        } else {
+            res.json(responseData);
         }
 
         console.log("[DONKI] Frische NASA-Daten gecached:", cacheKey);
