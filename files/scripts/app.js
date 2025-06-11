@@ -1,15 +1,14 @@
-// app.js – passend zu deinen HTML-IDs!
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //  M9: SESSION MANAGEMENT
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-// IDs aus deiner HTML
+// IDs aus HTML
 const loginForm = document.getElementById('login-form');
 const logoutBtn = document.getElementById('logout-btn');
-const userSpan  = document.getElementById('user-info');
-const msg       = document.getElementById('login-error');
+const userSpan = document.getElementById('user-info');
+const msg = document.getElementById('login-error');
 const toFavSite = document.getElementById('to-fav-site');
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // M9.3: Token-Nutzung nach Login
@@ -31,34 +30,14 @@ function getUsernameFromToken() {
     catch { return null; }
 }
 
-function api(path, opts={}) {
+// API Wrapper (JWT immer mitsenden)
+function api(path, opts = {}) {
     opts.headers = opts.headers || {};
     opts.headers['Content-Type'] = 'application/json';
     const token = getToken();
-    if (token) opts.headers['Authorization'] = 'Bearer '+token;
-    return fetch('/api'+path, opts).then(r => r.json());
+    if (token) opts.headers['Authorization'] = 'Bearer ' + token;
+    return fetch('/api' + path, opts).then(r => r.json());
 }
-
-// === UI-Funktionen ===
-function showApp(username) {
-    if (loginForm) loginForm.classList.add('hidden');
-    if (userSpan) {
-        userSpan.textContent = 'Logged in: ' + username;
-        userSpan.classList.remove('hidden');
-    }
-    if (logoutBtn) logoutBtn.classList.remove('hidden');
-
-    // Favorite-Link anzeigen
-    if (toFavSite) toFavSite.classList.remove('hidden');
-}
-function showLogin() {
-    if (loginForm) loginForm.classList.remove('hidden');
-    if (userSpan) userSpan.classList.add('hidden');
-    if (logoutBtn) logoutBtn.classList.add('hidden');
-    if (msg) msg.classList.add('hidden');
-    if (toFavSite) toFavSite.classList.add('hidden');
-}
-
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // M4: FE/BE (AJAX) - Sends user login data asynchronously using `fetch()`. Next Step: z95
@@ -74,34 +53,35 @@ function showLogin() {
 // 4) Logout -> JWT aus Speicher löschen
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    // === Login-Formular ===
-if (loginForm) {
-    loginForm.onsubmit = async e => {
-        e.preventDefault();
-        if (msg) msg.classList.add('hidden');
-        const u = loginForm.username.value;
-        const p = loginForm.password.value;
-        const res = await api('/login', {
-            method: 'POST',
-            body: JSON.stringify({ username: u, password: p }),
-        });
-        if (res.token) {
-            saveToken(res.token);
-            showApp(u);
-        } else if (msg) {
-            msg.textContent = res.error || 'Fehler beim Login';
-            msg.classList.remove('hidden');
-        }
-    };
-}
+// === Login-Formular ===
+document.getElementById('login-form')?.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (msg) msg.classList.add('hidden');
+    const u = loginForm.username.value;
+    const p = loginForm.password.value;
+    const res = await api('/login', {
+        method: 'POST',
+        body: JSON.stringify({username: u, password: p}),
+    });
+    if (res.token) {
+        saveToken(res.token);
+        showApp(u);
+    } else if (msg) {
+        msg.textContent = res.error || 'Fehler beim Login';
+        msg.classList.remove('hidden');
+    }
+})
 
 // === Logout --> löscht auch den Token der Session aus dem LocalStorage des Browsers ===
-if (logoutBtn) {
-    logoutBtn.onclick = () => {
-        clearToken();
-        showLogin();
-    };
-}
+document.getElementById('logout-btn')?.addEventListener('click', () => {
+    clearToken();
+    showLogin();
+})
+
+// === Initialisierungs-Logik ===
+window.addEventListener('DOMContentLoaded', () => {
+    checkSession();
+});
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                 M4: FE/BE (AJAX) - Checks if the user has a valid session token asynchronously.
@@ -116,7 +96,7 @@ async function checkSession() {
     // Hole Username über /api/me, wenn vorhanden
     try {
         const res = await fetch('/api/me', {
-            headers: { 'Authorization': 'Bearer ' + token }
+            headers: {'Authorization': 'Bearer ' + token}
         });
         if (!res.ok) throw new Error();
         const data = await res.json();
@@ -127,7 +107,25 @@ async function checkSession() {
     }
 }
 
-// === Initialisierungs-Logik ===
-window.addEventListener('DOMContentLoaded', () => {
-    checkSession();
-});
+// === UI-Funktionen ===
+function showApp(username) {
+    if (loginForm) loginForm.classList.add('hidden');
+
+    if (userSpan) {
+        userSpan.textContent = 'Logged in: ' + username;
+        userSpan.classList.remove('hidden');
+    }
+
+    if (logoutBtn) logoutBtn.classList.remove('hidden');
+
+    // Favorite-Link anzeigen
+    if (toFavSite) toFavSite.classList.remove('hidden');
+}
+
+function showLogin() {
+    if (loginForm) loginForm.classList.remove('hidden');
+    if (userSpan) userSpan.classList.add('hidden');
+    if (logoutBtn) logoutBtn.classList.add('hidden');
+    if (msg) msg.classList.add('hidden');
+    if (toFavSite) toFavSite.classList.add('hidden');
+}

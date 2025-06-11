@@ -83,6 +83,9 @@
       errorElem.textContent = 'You are not logged in, please login first.';
     }
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//   M3: The communication between FE and BE components must be implemented using HTTP(S). //GET - fetch
+//-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     async function fetchFavorites() {
       try {
         const res = await fetch(apiUrl, {
@@ -141,6 +144,9 @@
         } catch (err) {
           errorElem.textContent = err.message;
         }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//   M3: The communication between FE and BE components must be implemented using HTTP(S). //DELETE
+//-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         //Delete Favorite Function
       } else if (e.target.classList.contains('delete')) {
         if (!confirm('Do you really want to delete this favorite?')) return;

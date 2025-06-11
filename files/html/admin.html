@@ -52,10 +52,6 @@
     window.location.href = "/index.html";
   }
 
-
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //   M3: The communication between FE and BE components must be implemented using HTTP(S).   -->
-  //-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   async function loadCacheInfo() {
     const res = await fetch('/api/donki/admin/cacheinfo', {
       headers: { Authorization: 'Bearer ' + localStorage.getItem('jwt') }
