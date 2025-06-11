@@ -9,49 +9,18 @@ const userSpan = document.getElementById('user-info');
 const msg = document.getElementById('login-error');
 const toFavSite = document.getElementById('to-fav-site');
 
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// M9.3: Token-Nutzung nach Login
-// Frontend speichert JWT in localStorage -> { localStorage.setItem('jwt', t); }
-// Bei weiteren Requests wird Token in Header mitgeschickt & durch backend validiert.
-// --> function checkSession() z103
-//     Prüft ob Token vorhanden ist und gültig ist
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 // === Hilfsfunktionen für JWT und API ===
 function saveToken(t)   { localStorage.setItem('jwt', t); }
 function getToken()     { return localStorage.getItem('jwt'); }
 function clearToken()   { localStorage.removeItem('jwt'); }
 
-function getUsernameFromToken() {
-    const token = getToken();
-    if (!token) return null;
-    try { return JSON.parse(atob(token.split('.')[1])).username; }
-    catch { return null; }
-}
-
-// API Wrapper (JWT immer mitsenden)
-function api(path, opts = {}) {
-    opts.headers = opts.headers || {};
-    opts.headers['Content-Type'] = 'application/json';
-    const token = getToken();
-    if (token) opts.headers['Authorization'] = 'Bearer ' + token;
-    return fetch('/api' + path, opts).then(r => r.json());
-}
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// M4: FE/BE (AJAX) - Sends user login data asynchronously using `fetch()`. Next Step: z95
+// M9.1: Login - UserData (index.html (Formular) + app.js (Login-form))
+//      a. User gibt Login ein --> click on submit button
+//      b. Login-Formular löst ein Submit-Event aus.
+//      c. app.js fängt das ab und ruft die Login-API auf.
+// Next: Z66: function api(...
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// M9: Session management (Login, sessionID, JWT, ...).
-// 1) Login -> Formular (Benutzer, Passwort)
-// 2) Session-Management über JWT
-//      nach Login gibt BE JWT zurück;
-//      FE speichert token in lokalStorage;
-// 3) bei weiteren requests  wird Token als Header mitgeschickt -> BE prüft JWT -> middleware/auth.js
-// 4) Logout -> JWT aus Speicher löschen
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // === Login-Formular ===
 document.getElementById('login-form')?.addEventListener('submit', async e => {
@@ -63,42 +32,64 @@ document.getElementById('login-form')?.addEventListener('submit', async e => {
         method: 'POST',
         body: JSON.stringify({username: u, password: p}),
     });
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M9.4: Frontend speichert JWT im localStorage
+//      a. Die JS-Funktion speichert das JWT im Browser (localStorage).
+//      b. Danach wird showApp(u) aufgerufen - zeigt Username u im UI an.
+// Next: scripts/app.js
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     if (res.token) {
-        saveToken(res.token);
-        showApp(u);
+        saveToken(res.token); // -- (a)
+        showApp(u); // -- (b)
     } else if (msg) {
         msg.textContent = res.error || 'Fehler beim Login';
         msg.classList.remove('hidden');
     }
 })
 
-// === Logout --> löscht auch den Token der Session aus dem LocalStorage des Browsers ===
-document.getElementById('logout-btn')?.addEventListener('click', () => {
-    clearToken();
-    showLogin();
-})
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M9.2: Frontend sendet Daten ans Backend - (API Helper)
+//      a. api('/login', {...}) ruft die Backend-Route /api/login auf.
+//      b. Es wird ein HTTP POST mit JSON {username, password} geschickt.
+// Next: routes/auth.js
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M9.5: JWT wird für alle zukünftigen Requests verwendet - (API Helper)
+//      a. Wenn Frontend API-Requests macht, wird JWT immer im Authorization-Header mitgeschickt.
+// Next: middleware/auth.js (wenn Anfrage geschickt wird)
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-// === Initialisierungs-Logik ===
-window.addEventListener('DOMContentLoaded', () => {
-    checkSession();
-});
+// API Wrapper (JWT immer mitsenden)
+function api(path, opts = {}) {
+    opts.headers = opts.headers || {};
+    opts.headers['Content-Type'] = 'application/json';
+    const token = getToken();
+    if (token) opts.headers['Authorization'] = 'Bearer ' + token; // -- (a)
+    return fetch('/api' + path, opts).then(r => r.json()); //<- hier
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                 M4: FE/BE (AJAX) - Checks if the user has a valid session token asynchronously.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M9.6: Session-Check auf der Startseite
+//      a. Beim Laden der Seite wird per /api/me (routes/auth.js) geprüft, ob JWT noch gültig ist.
+//      b. Wenn Token gültig, dann OK --> else error
+// Next: Last Step - Logout Z.130
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // === Session-Check ===
 async function checkSession() {
     const token = getToken();
     if (!token) {
-        showLogin();
+        showLogin(); // -- (a)
         return;
     }
     // Hole Username über /api/me, wenn vorhanden
     try {
         const res = await fetch('/api/me', {
-            headers: {'Authorization': 'Bearer ' + token}
+            headers: {'Authorization': 'Bearer ' + token} // -- (a)
         });
-        if (!res.ok) throw new Error();
+        if (!res.ok) throw new Error(); // -- (b)
         const data = await res.json();
         showApp(data.username);
     } catch {
@@ -106,6 +97,11 @@ async function checkSession() {
         showLogin();
     }
 }
+
+// === Initialisierungs-Logik ===
+window.addEventListener('DOMContentLoaded', () => {
+    checkSession();
+});
 
 // === UI-Funktionen ===
 function showApp(username) {
@@ -129,3 +125,14 @@ function showLogin() {
     if (msg) msg.classList.add('hidden');
     if (toFavSite) toFavSite.classList.add('hidden');
 }
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M9.7: Logout
+//      a. Beim Logout wird der JWT gelöscht, die UI wechselt zurück zu Login.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// === Logout --> löscht auch den Token der Session aus dem LocalStorage des Browsers ===
+document.getElementById('logout-btn')?.addEventListener('click', () => {
+    clearToken(); // -- (a)
+    showLogin(); // -- (a)
+})

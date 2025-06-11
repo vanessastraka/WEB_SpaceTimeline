@@ -1,27 +1,28 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// M9.4.1: JWT Validation
-// JWT wird geprüft, und dann zurück ans frontend geschickt, wenn es valide
-// RequireAdmin ist zum prüfen ob im JWT die rolle ADMIN vorhanden ist -> Admin Dashboard
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 const jwt = require('jsonwebtoken');
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// M9.6: Backend prüft JWT bei geschützten Routen
+//      a. Alle geschützten Routen nutzen die Middleware requireAuth.
+//      b. Middleware prüft JWT, entschlüsselt Userinfo, hängt sie an req.
+//      c. Für Admin-DB wird zusätzlich noch die Rolle geprüft, für extra Sicherheit.
+// Next: scripts/app.js
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 function requireAuth(req, res, next) {
     const header = req.headers.authorization;
     if (!header) return res.status(401).json({ error: 'No Token' });
     const token = header.split(' ')[1];
     try {
-        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        const payload = jwt.verify(token, process.env.JWT_SECRET); // -- (a/b)
         req.userId = payload.id;
-        req.userRole = payload.role || 'user'; // <--- Rolle immer im Request speichern!
+        req.userRole = payload.role || 'user';
         next();
     } catch {
         res.status(401).json({ error: 'Invalid Token' });
     }
 }
 
-function requireAdmin(req, res, next) {
+function requireAdmin(req, res, next) { // -- (c)
     const header = req.headers.authorization;
     if (!header) return res.status(401).json({ error: 'No Token' });
     const token = header.split(' ')[1];
