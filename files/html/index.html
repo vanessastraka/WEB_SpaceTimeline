@@ -112,19 +112,6 @@
         const outBtn = document.getElementById('logout-btn');
         const dashboardBtn = document.getElementById('dashboard-btn');
 
-        /*
-    // Überprüfung des Usernamens aus JWT
-    function getUsernameFromToken() {
-        const t = localStorage.getItem('jwt');
-        if (!t) return null;
-        try {
-            return JSON.parse(atob(t.split('.')[1])).username;
-        } catch {
-            return null;
-        }
-    }
-         */
-
     // Überprüfung der zugewiesenen Rolle aus JWT
     function getUserRoleFromToken() {
         const t = localStorage.getItem('jwt');
