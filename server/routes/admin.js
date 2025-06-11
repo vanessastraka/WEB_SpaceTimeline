@@ -19,7 +19,7 @@ function respondData(req, res, rootName, data) {
 router.get('/users', requireAdmin, async (req, res) => {
     try {
         const users = await User.find({}, 'username role'); // nur username & role!
-        respondData(req, res, 'users', { user: users }); //um User Liste als Array in XML richtig ausgeben zu können (user: users) -> aus users mehrere user Kinder
+        respondData(req, res, 'users', users); //um User Liste als Array in XML richtig ausgeben zu können (user: users) -> aus users mehrere user Kinder
     } catch (err) {
         res.status(500);
         respondData(req, res, 'error', { error: err.message });
