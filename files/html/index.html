@@ -107,6 +107,12 @@
 
 <!-- SCRIPTS -->
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('login-form');
+        const errSpan = document.getElementById('login-error');
+        const userSp = document.getElementById('user-info');
+        const outBtn = document.getElementById('logout-btn');
+
     // Überprüfung des Usernamens aus JWT
     function getUsernameFromToken() {
         const t = localStorage.getItem('jwt');
@@ -139,13 +145,17 @@
     })
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // M9.1: Login und Token-Erstellung (Backend)
-    // - User gibt Daten ein
-    // - Daten werden Authentifiziert bzw. Überprüft und ans Backend geschickt
-    // - Bei erfolgreicher Authentifizierung erstellt Backend ein JWT
-    // --> WEITER BEI: routes/auth.js
+    // M9.1: Login - UserData (index.html (Formular) + app.js (Login-form))
+    //      a. User gibt Login ein --> click on submit button
+    //      b. Login-Formular löst ein Submit-Event aus.
+    //      c. app.js fängt das ab und ruft die Login-API auf.
+    // Next: scripts/app.js
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //   M3: The communication between FE and BE components must be implemented using HTTP(S). //POST
+    //-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // 2) Login-Funktion
     async function doLogin(u, p) {
         const res = await fetch('/api/login', {
@@ -156,23 +166,8 @@
         return res.json();
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.getElementById('login-form');
-        const errSpan = document.getElementById('login-error');
-        const userSp = document.getElementById('user-info');
-        const outBtn = document.getElementById('logout-btn');
-
-        // bereits eingeloggt?
-        const name = getUsernameFromToken();
-        if (name) {
-            form.classList.add('hidden');
-            userSp.textContent = 'Signed in: ' + name;
-            userSp.classList.remove('hidden');
-            outBtn.classList.remove('hidden');
-        }
-
         //Event Listener für den Button "Login" - schickt dann die Daten ans Backend und macht JWT damit
-        form.addEventListener('submit', async e => {
+   form.addEventListener('submit', async e => {
             e.preventDefault();
             errSpan.classList.add('hidden');
             const u = document.getElementById('login-username').value;
@@ -212,6 +207,16 @@
                 document.getElementById('hamburger-menu')
                     .classList.toggle('hidden');
             });
+
+            // bereits eingeloggt?
+            const name = getUsernameFromToken();
+            if (name) {
+                form.classList.add('hidden');
+                userSp.textContent = 'Signed in: ' + name;
+                userSp.classList.remove('hidden');
+                outBtn.classList.remove('hidden');
+            }
+
     });
 </script>
 <script src="../scripts/timeline.js"></script>

@@ -36,9 +36,6 @@ app.use('/api/wikimedia', wikimediaRoutes);
 app.use('/api/apod', apodRoutes);
 
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//     M6: The HTTP endpoints of the BE component must manage resources using HTTP methods **GET**
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //make index.html reachable
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "..", "files", "html", "index.html"));

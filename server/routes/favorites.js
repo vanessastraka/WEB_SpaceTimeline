@@ -4,7 +4,7 @@ const User     = require('../models/User');
 const { requireAuth } = require('../middleware/auth'); // prüft JWT
 const router   = express.Router();
 
-router.use(requireAuth);
+router.use(requireAuth); //verpflichtet jeden Request dieser routen zu authentifizieren
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 //      M6: HTTP endpoints of the BE manage resources
